@@ -3,13 +3,13 @@ require Exporter;
 use strict;
 use vars qw($VERSION @ISA $errStr);
 @ISA = qw(Exporter);
-$VERSION=1.14;
+$VERSION=1.15;
 my @aLoaded = ();
 #------------------------------------------------------------------------------
-# new (for Spreadsheet::ParseExcel)
+# new (for GD::Barcode)
 #------------------------------------------------------------------------------
-sub new($$$) {
-        my($sClass, $sType, $sTxt) = @_;
+sub new($$$;$) {
+        my($sClass, $sType, $sTxt, $rhPrm) = @_;
         my $oThis = {};
         unless(grep(/^$sType$/, @aLoaded)) {
         eval "require 'GD/Barcode/$sType.pm';";
@@ -20,7 +20,7 @@ sub new($$$) {
                 push(@aLoaded, $sType);
         }
         bless $oThis, "GD::Barcode::$sType";
-        return undef if($errStr = $oThis->init($sTxt));
+        return undef if($errStr = $oThis->init($sTxt, $rhPrm));
         return $oThis;
 }
 #------------------------------------------------------------------------------

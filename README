@@ -10,7 +10,7 @@ DESCRIPTION
 REQUIREMENT
     This module requires these modules:
                 GD
-    From 1.14, you can use this module even if no GD (except plot method).
+    From 1.15, you can use this module even if no GD (except plot method).
 
 INSTALLATION
     The module can be installed using the standard Perl procedure:

@@ -8,7 +8,7 @@ print "=======================\nEAN13: NORMAL\n";
 $oGdBar = GD::Barcode->new('EAN13', '123456789012');
 print "PTN:", $oGdBar->{text}, ":" ,$oGdBar->barcode, "\n";
 open(OUT, '>EAN13.png');
-binmode OUT;					#for Windows
+binmode OUT;                                    #for Windows
 print OUT $oGdBar->plot->png;
 close OUT;
 undef $oGdBar;
@@ -25,7 +25,7 @@ print "=======================\nEAN8: NORMAL\n";
 $oGdBar = GD::Barcode->new('EAN8', '1234567');
 print "PTN:", $oGdBar->{text}, ":" ,$oGdBar->barcode, "\n";
 open(OUT, '>EAN8.png');
-binmode OUT;					#for Windows
+binmode OUT;                                    #for Windows
 print OUT $oGdBar->plot->png;
 close OUT;
 undef $oGdBar;
@@ -42,7 +42,7 @@ print "=======================\nUPCA: NORMAL\n";
 $oGdBar = GD::Barcode->new('UPCA', '12345678901');
 print "PTN:", $oGdBar->{text}, ":" ,$oGdBar->barcode, "\n";
 open(OUT, '>UPCA.png');
-binmode OUT;					#for Windows
+binmode OUT;                                    #for Windows
 print OUT $oGdBar->plot->png;
 close OUT;
 undef $oGdBar;
@@ -59,7 +59,7 @@ print "=======================\nUPCE: NORMAL\n";
 $oGdBar = GD::Barcode->new('UPCE', '1234567');
 print "PTN:", $oGdBar->{text}, ":" ,$oGdBar->barcode, "\n";
 open(OUT, '>UPCE.png');
-binmode OUT;					#for Windows
+binmode OUT;                                    #for Windows
 print OUT $oGdBar->plot->png;
 close OUT;
 undef $oGdBar;
@@ -76,7 +76,7 @@ print "=======================\nNW7: NORMAL\n";
 $oGdBar = GD::Barcode->new('NW7', '12345678');
 print "PTN:", $oGdBar->{text}, ":" ,$oGdBar->barcode, "\n";
 open(OUT, '>NW7.png');
-binmode OUT;					#for Windows
+binmode OUT;                                    #for Windows
 print OUT $oGdBar->plot->png;
 close OUT;
 undef $oGdBar;
@@ -93,7 +93,7 @@ print "=======================\nCode39: NORMAL\n";
 $oGdBar = GD::Barcode->new('Code39', '*123456789012*');
 print "PTN:", $oGdBar->{text}, ":" ,$oGdBar->barcode, "\n";
 open(OUT, '>Code39.png');
-binmode OUT;					#for Windows
+binmode OUT;                                    #for Windows
 print OUT $oGdBar->plot->png;
 close OUT;
 undef $oGdBar;
@@ -110,7 +110,7 @@ print "=======================\nITF: NORMAL\n";
 $oGdBar = GD::Barcode->new('ITF', '0123456789');
 print "PTN:", $oGdBar->{text}, ":" ,$oGdBar->barcode, "\n";
 open(OUT, '>ITF.png');
-binmode OUT;					#for Windows
+binmode OUT;                                    #for Windows
 print OUT $oGdBar->plot->png;
 close OUT;
 undef $oGdBar;
@@ -127,7 +127,7 @@ print "=======================\nIndustrial2of5: NORMAL\n";
 $oGdBar = GD::Barcode->new('Industrial2of5', '0123456789');
 print "PTN:", $oGdBar->{text}, ":" ,$oGdBar->barcode, "\n";
 open(OUT, '>Industrial2of5.png');
-binmode OUT;					#for Windows
+binmode OUT;                                    #for Windows
 print OUT $oGdBar->plot->png;
 close OUT;
 undef $oGdBar;
@@ -144,7 +144,7 @@ print "=======================\nIATA2of5: NORMAL\n";
 $oGdBar = GD::Barcode->new('IATA2of5', '0123456789');
 print "PTN:", $oGdBar->{text}, ":" ,$oGdBar->barcode, "\n";
 open(OUT, '>IATA2of5.png');
-binmode OUT;					#for Windows
+binmode OUT;                                    #for Windows
 print OUT $oGdBar->plot->png;
 close OUT;
 undef $oGdBar;
@@ -161,7 +161,7 @@ print "=======================\nMatrix2of5: NORMAL\n";
 $oGdBar = GD::Barcode->new('Matrix2of5', '0123456789');
 print "PTN:", $oGdBar->{text}, ":" ,$oGdBar->barcode, "\n";
 open(OUT, '>Matrix2of5.png');
-binmode OUT;					#for Windows
+binmode OUT;                                    #for Windows
 print OUT $oGdBar->plot->png;
 close OUT;
 undef $oGdBar;
@@ -178,7 +178,7 @@ print "=======================\nCOOP2of5: NORMAL\n";
 $oGdBar = GD::Barcode->new('COOP2of5', '0123456789');
 print "PTN:", $oGdBar->{text}, ":" ,$oGdBar->barcode, "\n";
 open(OUT, '>COOP2of5.png');
-binmode OUT;					#for Windows
+binmode OUT;                                    #for Windows
 print OUT $oGdBar->plot->png;
 close OUT;
 undef $oGdBar;
@@ -187,4 +187,18 @@ undef $oGdBar;
 print "COOP2of5: ERROR\n";
 $oGdBar = GD::Barcode->new('COOP2of5', '123456788A');
 print "ERROR:", $GD::Barcode::errStr, "\n";
+undef $oGdBar;
+
+#12)QRCode
+#12.1 NORMAL
+print "=======================\nQRcode: NORMAL\n";
+$oGdBar = GD::Barcode->new('QRcode', '123456789012', 
+                    { Ecc => 'M',
+                      ModuleSize => 2,
+                    });
+print "PTN:", $oGdBar->{text}, ":" ,$oGdBar->barcode, "\n";
+open(OUT, '>QRcode.png');
+binmode OUT;                                    #for Windows
+print OUT $oGdBar->plot->png;
+close OUT;
 undef $oGdBar;

@@ -1,5 +1,10 @@
 Revision history for Perl extension GD::Barcode.
 
+1.15  Mon Apr 24 15:50:00 2004
+        - Add QRcode support
+            based on QRcode image CGI version 0.50   (C)2000-2002,Y.Swetake
+        - Little change new metho of GD module.
+
 1.14  Sat May 31 5:30:00 2003
         - Change all GD::Barcode::* to be able to use without GD module.
               Thank you Lars Lundberg for suggestion.
