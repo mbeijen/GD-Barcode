@@ -5,6 +5,7 @@ use GD::Barcode::UPCA;
 use GD::Barcode::UPCE;
 use GD::Barcode::NW7;
 use GD::Barcode::Code39;
+use GD::Barcode::ITF;
 
 my $oGdBar;
 #1)EAN13
@@ -101,4 +102,20 @@ undef $oGdBar;
 print "Code39: ERROR\n";
 $oGdBar = GD::Barcode::Code39->new('*12345678901;*');
 print "ERROR:", $GD::Barcode::Code39::errStr, "\n";
+undef $oGdBar;
+
+#7)ITF
+#7.1 NORMAL
+print "=======================\nITF: NORMAL\n";
+$oGdBar = GD::Barcode::Code39->new('1234567890*');
+print "PTN:", $oGdBar->{text}, ":" ,$oGdBar->barcode, "\n";
+open(OUT, '>ITF.png');
+print OUT $oGdBar->plot->png;
+close OUT;
+undef $oGdBar;
+
+#7.2 Error
+print "ITF: ERROR\n";
+$oGdBar = GD::Barcode::ITF->new('*1234567');
+print "ERROR:", $GD::Barcode::ITF::errStr, "\n";
 undef $oGdBar;

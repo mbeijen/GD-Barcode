@@ -3,7 +3,7 @@ require Exporter;
 use strict;
 use vars qw($VERSION @ISA $errStr);
 @ISA = qw(Exporter);
-$VERSION=1.11;
+$VERSION=1.12;
 my @aLoaded = ();
 #------------------------------------------------------------------------------
 # new (for Spreadsheet::ParseExcel)

@@ -26,12 +26,12 @@ INSTALLATION
 SAMPLES
   There are 2 sample scripts in "sample" directry.
   smp_all.pl : shows how to make barcode images in PNG with GD::Barcode.
-                  (EAN13, EAN8, UPC-A, UPC-E, NW7 and Code39)
+                  (EAN13, EAN8, UPC-A, UPC-E, NW7, Code39 and ITF)
   smp_ind.pl : same as smp_all.pl but uses GD::Barcode subclasses.
   
 VERSION
-    This document refers to version 1.11 of GD::Barcode
-    released Nov 2, 2000.
+    This document refers to version 1.12 of GD::Barcode
+    released DEC 16, 2000.
 
 AUTHOR
     Kawai Takanori (GCD00051@nifty.ne.jp)

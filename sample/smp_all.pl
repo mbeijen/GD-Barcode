@@ -97,3 +97,19 @@ print "Code39: ERROR\n";
 $oGdBar = GD::Barcode->new('Code39', '*12345678901;*');
 print "ERROR:", $GD::Barcode::errStr, "\n";
 undef $oGdBar;
+
+#7)ITF(Interleaved 2 of 5)
+#7.1 NORMAL
+print "=======================\nITF: NORMAL\n";
+$oGdBar = GD::Barcode->new('ITF', '0123456789');
+print "PTN:", $oGdBar->{text}, ":" ,$oGdBar->barcode, "\n";
+open(OUT, '>ITF.png');
+print OUT $oGdBar->plot->png;
+close OUT;
+undef $oGdBar;
+
+#7.2 Error
+print "ITF: ERROR\n";
+$oGdBar = GD::Barcode->new('ITF', '123456788A');
+print "ERROR:", $GD::Barcode::errStr, "\n";
+undef $oGdBar;

@@ -1,5 +1,9 @@
 Revision history for Perl extension GD::Barcode.
 
+1.12  Sat Dec 16 10:00:00 2000
+	- Add ITF(Interleaved 2 of 5) support
+	- Modifty EAN8
+
 1.10  Sun Oct 29 10:00:00 2000
 	- First release (Converted from KbBarcode.pm)
 
