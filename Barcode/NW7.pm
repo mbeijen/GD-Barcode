@@ -1,6 +1,6 @@
 package GD::Barcode::NW7;
 use strict;
-use GD;
+BEGIN { eval{require 'GD.pm';}; };
 use GD::Barcode;
 require Exporter;
 use vars qw($VERSION @ISA $errStr);
@@ -43,22 +43,22 @@ sub new($$) {
 # init (for GD::Barcode::NW7)
 #------------------------------------------------------------------------------
 sub init($$\%){
-	my($oThis, $sTxt) =@_;
+        my($oThis, $sTxt) =@_;
 #Check
     return 'Invalid Characters' if($sTxt =~ /[^0-9\-\$:\/.+ABCD]/);
 
 #CalcCd
-	$oThis->{text} = $sTxt;
-	return '';
+        $oThis->{text} = $sTxt;
+        return '';
 }
 #------------------------------------------------------------------------------
 # barcode (for GD::Barcode::NW7)
 #------------------------------------------------------------------------------
 sub barcode($) {
-	my($oThis) = @_;
+        my($oThis) = @_;
     my($sWk, $sRes);
 
-  	my $sTxt = $oThis->{text};
+        my $sTxt = $oThis->{text};
     $sRes = '';
     foreach $sWk (split(//, $sTxt)) {
       $sRes .= GD::Barcode::dumpCode( $nw7Bar->{$sWk} .'0' );
@@ -77,17 +77,17 @@ sub plot($%) {
   my $iHeight = ($hParam{Height})? $hParam{Height} : 50;
   my ($oGd, $cBlack);
   if($hParam{NoText}) {
-	($oGd, $cBlack) = GD::Barcode::plot($sPtn, length($sPtn), $iHeight, 0, 0);
+        ($oGd, $cBlack) = GD::Barcode::plot($sPtn, length($sPtn), $iHeight, 0, 0);
   }
   else {
-	my($fW,$fH) = (gdSmallFont->width, gdSmallFont->height);
-  	my $iWidth = length($sPtn);
-	#Bar Image
-  	($oGd, $cBlack) = GD::Barcode::plot($sPtn, $iWidth, $iHeight, $fH, 0);
+        my($fW,$fH) = (GD::Font->Small->width, GD::Font->Small->height);
+        my $iWidth = length($sPtn);
+        #Bar Image
+        ($oGd, $cBlack) = GD::Barcode::plot($sPtn, $iWidth, $iHeight, $fH, 0);
 
-	#String
-	$oGd->string(gdSmallFont, (length($sPtn)-$fW*(length($sTxt)))/2, $iHeight - $fH, 
-						$sTxt, $cBlack);
+        #String
+        $oGd->string(GD::Font->Small, (length($sPtn)-$fW*(length($sTxt)))/2, $iHeight - $fH, 
+                                                $sTxt, $cBlack);
   }
   return $oGd;
 }
@@ -112,7 +112,7 @@ I<ex. CGI>
 I<with Error Check>
 
   my $oGdBar = GD::Barcode::NW7->new('123456789E');
-  die $GD::Barcode::NW7::errStr unless($oGdBar);	#Invalid Characters
+  die $GD::Barcode::NW7::errStr unless($oGdBar);        #Invalid Characters
 
 =head1 DESCRIPTION
 

@@ -8,8 +8,9 @@ DESCRIPTION
     Macintosh platforms. 
 
 REQUIREMENT
-	This module requires these modules:
-		GD
+    This module requires these modules:
+                GD
+    From 1.14, you can use this module even if no GD (except plot method).
 
 INSTALLATION
     The module can be installed using the standard Perl procedure:
@@ -31,8 +32,8 @@ SAMPLES
   smp_ind.pl : same as smp_all.pl but uses GD::Barcode subclasses.
   
 VERSION
-    This document refers to version 1.13 of GD::Barcode
-    released DEC 30, 2000.
+    This document refers to version 1.14 of GD::Barcode
+    released May 31, 2003.
 
 AUTHOR
     Kawai Takanori (GCD00051@nifty.ne.jp)

@@ -1,6 +1,6 @@
 package GD::Barcode::ITF;
 use strict;
-use GD;
+BEGIN { eval{require 'GD.pm';}; };
 use GD::Barcode;
 require Exporter;
 use vars qw($VERSION @ISA $errStr);
@@ -21,16 +21,16 @@ sub new($$) {
 # init (for GD::Barcode::ITF)
 #------------------------------------------------------------------------------
 sub init($$){
-	my($oThis, $sTxt) =@_;
+        my($oThis, $sTxt) =@_;
 #Check
     return 'Invalid Characters' if($sTxt =~ /[^0-9]/);
 
 #Not Set Chec
-	if( length($sTxt) %2 ) {
-		$sTxt .= calcITFCD($sTxt)
-	}
-	$oThis->{text} = $sTxt;
-	return '';
+        if( length($sTxt) %2 ) {
+                $sTxt .= calcITFCD($sTxt)
+        }
+        $oThis->{text} = $sTxt;
+        return '';
 }
 #------------------------------------------------------------------------------
 # calcITFCD (for GD::Barcode::ITF)
@@ -73,9 +73,9 @@ sub barcode($) {
       my $sBlack = $rhPtn->{substr($sTxt, $i, 1)};
       my $sWhite = $rhPtn->{substr($sTxt, $i+1, 1)};
       for(my $j = 0; $j < length($sBlack); $j++) {
-		$sRes .= (substr($sBlack, $j, 1) eq '1')? '1' x 3: '1';
-		$sRes .= (substr($sWhite, $j, 1) eq '1')? '0' x 3: '0';
-	  }
+                $sRes .= (substr($sBlack, $j, 1) eq '1')? '1' x 3: '1';
+                $sRes .= (substr($sWhite, $j, 1) eq '1')? '0' x 3: '0';
+          }
   }
   $sRes .= '1' x 3 . '01';  #STOP
   return $sRes;
@@ -93,17 +93,17 @@ sub plot($;%) {
   my $iHeight = ($hParam{Height})? $hParam{Height} : 50;
   my($oGd, $cBlack);
   if($hParam{NoText}) {
-	($oGd, $cBlack) = GD::Barcode::plot($sPtn, length($sPtn), $iHeight, 0, 0);
+        ($oGd, $cBlack) = GD::Barcode::plot($sPtn, length($sPtn), $iHeight, 0, 0);
   }
   else {
-	my($fW,$fH) = (gdSmallFont->width, gdSmallFont->height);
-  	my $iWidth = length($sPtn);
-	#Bar Image
-  	($oGd, $cBlack) = GD::Barcode::plot($sPtn, $iWidth, $iHeight, $fH, 0);
+        my($fW,$fH) = (GD::Font->Small->width, GD::Font->Small->height);
+        my $iWidth = length($sPtn);
+        #Bar Image
+        ($oGd, $cBlack) = GD::Barcode::plot($sPtn, $iWidth, $iHeight, $fH, 0);
 
-	#String
-  	$oGd->string(gdSmallFont, (length($sPtn)-$fW*(length($sTxtWk)))/2, $iHeight - $fH, 
-			$sTxtWk, $cBlack);
+        #String
+        $oGd->string(GD::Font->Small, (length($sPtn)-$fW*(length($sTxtWk)))/2, $iHeight - $fH, 
+                        $sTxtWk, $cBlack);
   }
   return $oGd;
 }
@@ -128,7 +128,7 @@ I<ex. CGI>
 I<with Error Check>
 
   my $oGdBar = GD::Barcode::ITF->new('A12345678');
-  die $GD::Barcode::ITF::errStr unless($oGdBar);	#Invalid Characters
+  die $GD::Barcode::ITF::errStr unless($oGdBar);        #Invalid Characters
   $oGdBar->plot->png;
 
 

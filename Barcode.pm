@@ -3,26 +3,25 @@ require Exporter;
 use strict;
 use vars qw($VERSION @ISA $errStr);
 @ISA = qw(Exporter);
-$VERSION=1.13;
+$VERSION=1.14;
 my @aLoaded = ();
 #------------------------------------------------------------------------------
 # new (for Spreadsheet::ParseExcel)
 #------------------------------------------------------------------------------
 sub new($$$) {
-	my($sClass, $sType, $sTxt) = @_;
-#  	my $oThis = {text=>$sTxt};
-  	my $oThis = {};
-  	unless(grep(/^$sType$/, @aLoaded)) {
-    	eval "require 'GD/Barcode/$sType.pm';";
-      	if($@) {
-        	$errStr = "Can't load $sType : $@";
-    		return undef;
-		}
-		push(@aLoaded, $sType);
-  	}
-  	bless $oThis, "GD::Barcode::$sType";
-  	return undef if($errStr = $oThis->init($sTxt));
-  	return $oThis;
+        my($sClass, $sType, $sTxt) = @_;
+        my $oThis = {};
+        unless(grep(/^$sType$/, @aLoaded)) {
+        eval "require 'GD/Barcode/$sType.pm';";
+        if($@) {
+                $errStr = "Can't load $sType : $@";
+                return undef;
+                }
+                push(@aLoaded, $sType);
+        }
+        bless $oThis, "GD::Barcode::$sType";
+        return undef if($errStr = $oThis->init($sTxt));
+        return $oThis;
 }
 #------------------------------------------------------------------------------
 # barPtn (for GD::Barcode)
@@ -33,7 +32,7 @@ sub barPtn {
 
     $sRes = '';
     foreach $sWk (split(//, $bar)) {
-		$sRes .= $table->{$sWk};
+                $sRes .= $table->{$sWk};
     }
     return $sRes;
 }
@@ -49,8 +48,8 @@ sub dumpCode {
     $sClr = '1';  # 1: Black, 0:White
 
     foreach $sWk (split(//, $sCode)) {
-		$sRes .= ($sWk eq '1')? $sClr x 3 : $sClr;	#3 times or Normal
-		$sClr = ($sClr eq '0')? '1': '0';
+                $sRes .= ($sWk eq '1')? $sClr x 3 : $sClr;      #3 times or Normal
+                $sClr = ($sClr eq '0')? '1': '0';
     }
     return $sRes;
 }
@@ -60,31 +59,34 @@ sub dumpCode {
 sub plot($$$$$) {
   my($sBarcode, $iWidth, $iHeight, $fH, $iStart) = @_;
   #Create Image
-  my $gdNew = GD::Image->new($iWidth, $iHeight);
-  my $white = $gdNew->colorAllocate(255, 255, 255);
-  my $black = $gdNew->colorAllocate(  0,   0,   0);
+  my ($gdNew, $cWhite, $cBlack);
+  eval {
+    $gdNew = GD::Image->new($iWidth, $iHeight);
+    $cWhite = $gdNew->colorAllocate(255, 255, 255);
+    $cBlack = $gdNew->colorAllocate(  0,   0,   0);
 
-  my $iPos =$iStart;
-  foreach my $cWk (split(//,$sBarcode)) {
-    if($cWk eq '0') {
-        $gdNew->line($iPos, 0, $iPos, $iHeight - $fH, $white);
+    my $iPos =$iStart;
+    foreach my $cWk (split(//,$sBarcode)) {
+        if($cWk eq '0') {
+            $gdNew->line($iPos, 0, $iPos, $iHeight - $fH, $cWhite);
+        }
+        elsif ($cWk eq 'G') {
+            $gdNew->line($iPos, 0, $iPos, $iHeight - 2*($fH/3), $cBlack);
+        }
+        else {                              #$cWk eq "1" etc.
+            $gdNew->line($iPos, 0, $iPos, $iHeight - $fH, $cBlack);
+        }
+        $iPos++;
     }
-    elsif ($cWk eq 'G') {
-        $gdNew->line($iPos, 0, $iPos, $iHeight - 2*($fH/3), $black);
-    }
-    else {				#$cWk eq "1" etc.
-        $gdNew->line($iPos, 0, $iPos, $iHeight - $fH, $black);
-    }
-    $iPos++;
-  }
-  return ($gdNew, $black);
+  };
+  return ($gdNew, $cBlack);
 }
 #------------------------------------------------------------------------------
 # Text (for GD::Barcode)
 #------------------------------------------------------------------------------
 sub Text($) {
-	my($oThis) = @_;
-	return $oThis->{text};
+        my($oThis) = @_;
+        return $oThis->{text};
 }
 1;
 __END__
@@ -106,13 +108,16 @@ I<ex. CGI>
 I<with Error Check>
 
   my $oGdBar = GD::Barcode->new('EAN13', '12345678901');
-  die $GD::Barcode::errStr unless($oGdBar);	#Invalid Length
+  die $GD::Barcode::errStr unless($oGdBar);     #Invalid Length
   $oGdBar->plot->png;
 
 =head1 DESCRIPTION
 
 GD::Barcode is a subclass of GD and allows you to create barcode image with GD.
 This module based on "Generate Barcode Ver 1.02 By Shisei Hanai 97/08/22".
+
+From 1.14, you can use this module even if no GD (except plot method).
+
 
 =head2 new
 

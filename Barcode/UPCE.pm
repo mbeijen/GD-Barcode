@@ -1,6 +1,6 @@
 package GD::Barcode::UPCE;
 use strict;
-use GD;
+BEGIN { eval{require 'GD.pm';}; };
 use GD::Barcode;
 require Exporter;
 use vars qw($VERSION @ISA $errStr);
@@ -59,26 +59,26 @@ sub new($$) {
 # init (for Spreadsheet::ParseExcel)
 #------------------------------------------------------------------------------
 sub init($$){
-	my($oThis, $sTxt) =@_;
-	return 'Invalid characters' if($sTxt =~ /[^0-9]/); 
+        my($oThis, $sTxt) =@_;
+        return 'Invalid characters' if($sTxt =~ /[^0-9]/); 
 
 #Check
     my $iLen = length($sTxt);
-	if( $iLen == 6 ) {
-		$sTxt = '0' . $sTxt;
-    	$sTxt .= calcUPCECD( $sTxt );
-	}
-	elsif($iLen == 7) {
-    	$sTxt .= calcUPCECD( $sTxt );
-	}
-	elsif($iLen == 8) {
-		;
-	}
-	else {
-		return 'Invalid Length';
-	}
-	$oThis->{text} = $sTxt;
-	return '';
+        if( $iLen == 6 ) {
+                $sTxt = '0' . $sTxt;
+        $sTxt .= calcUPCECD( $sTxt );
+        }
+        elsif($iLen == 7) {
+        $sTxt .= calcUPCECD( $sTxt );
+        }
+        elsif($iLen == 8) {
+                ;
+        }
+        else {
+                return 'Invalid Length';
+        }
+        $oThis->{text} = $sTxt;
+        return '';
 }
 #------------------------------------------------------------------------------
 # calcUPCACD (for GD::Barcode::UPCE)
@@ -104,17 +104,17 @@ sub calcUPCECD {
   my( $upcA );
 
   my $cLast = substr($sTxt, 6, 1);
-  if ($cLast =~ /[0-2]/) {	#0,1,2
-	$upcA = substr($sTxt, 0, 3). $cLast . '0' x 4 . substr($sTxt, 3, 3);
+  if ($cLast =~ /[0-2]/) {      #0,1,2
+        $upcA = substr($sTxt, 0, 3). $cLast . '0' x 4 . substr($sTxt, 3, 3);
   }
   elsif ($cLast eq '3') {
-	$upcA = substr($sTxt, 0, 4) . '0' x 5 . substr($sTxt, 4, 2);
+        $upcA = substr($sTxt, 0, 4) . '0' x 5 . substr($sTxt, 4, 2);
   }
   elsif ($cLast eq '4') {
-	$upcA = substr($sTxt, 0, 5) . '0' x 5 . substr($sTxt, 5, 1);
+        $upcA = substr($sTxt, 0, 5) . '0' x 5 . substr($sTxt, 5, 1);
   }
   else  { # $cLast =~ /5-9/
-	$upcA = substr($sTxt, 0, 6) . '0' x 4 . $cLast;
+        $upcA = substr($sTxt, 0, 6) . '0' x 4 . $cLast;
   }
   return &calcUPCACD( $upcA );
 }
@@ -128,15 +128,15 @@ sub barcode($) {
 
 #(1)Init
   my $sTxt = $oThis->{text};
-  $sRes = $guardBar;		#GUARD
+  $sRes = $guardBar;            #GUARD
   $oddEven = $oddEven4UPCE->{substr($sTxt, 7, 1)};
 
 #(2)Left 6 (Skip 1 character)
     for( $i = 1; $i < 7; $i++ ){
-      	$c = substr($sTxt, $i, 1);
-		$sRes .= GD::Barcode::barPtn($c, 
-				( substr($oddEven, $i-1, 1) eq 'O' )?
-						$leftOddBar : $leftEvenBar);
+        $c = substr($sTxt, $i, 1);
+                $sRes .= GD::Barcode::barPtn($c, 
+                                ( substr($oddEven, $i-1, 1) eq 'O' )?
+                                                $leftOddBar : $leftEvenBar);
     }
 #
   $sRes .= $UPCrightGuardBar;
@@ -155,17 +155,17 @@ sub plot($%) {
   my $iHeight = ($hParam{Height})? $hParam{Height} : 50;
   my ($oGd, $cBlack);
   if($hParam{NoText}) {
-	($oGd, $cBlack) = GD::Barcode::plot($sPtn, length($sPtn), $iHeight, 0, 0);
+        ($oGd, $cBlack) = GD::Barcode::plot($sPtn, length($sPtn), $iHeight, 0, 0);
   }
   else {
-	my($fW,$fH) = (gdSmallFont->width, gdSmallFont->height);
-  	my $iWidth = length($sPtn)+ 2*($fW+1);
-	#Bar Image
-  	($oGd, $cBlack) = GD::Barcode::plot($sPtn, $iWidth, $iHeight, $fH, $fW+1);
-	#String
-  	$oGd->string(gdSmallFont,        0, $iHeight - $fH, substr($sTxt, 0, 1), $cBlack);
-  	$oGd->string(gdSmallFont, $fW +  8, $iHeight - $fH, substr($sTxt, 1, 6), $cBlack);
-  	$oGd->string(gdSmallFont, $fW + 54, $iHeight - $fH, substr($sTxt, 7, 1), $cBlack);
+        my($fW,$fH) = (GD::Font->Small->width, GD::Font->Small->height);
+        my $iWidth = length($sPtn)+ 2*($fW+1);
+        #Bar Image
+        ($oGd, $cBlack) = GD::Barcode::plot($sPtn, $iWidth, $iHeight, $fH, $fW+1);
+        #String
+        $oGd->string(GD::Font->Small,        0, $iHeight - $fH, substr($sTxt, 0, 1), $cBlack);
+        $oGd->string(GD::Font->Small, $fW +  8, $iHeight - $fH, substr($sTxt, 1, 6), $cBlack);
+        $oGd->string(GD::Font->Small, $fW + 54, $iHeight - $fH, substr($sTxt, 7, 1), $cBlack);
   }
   return $oGd;
 
@@ -191,7 +191,7 @@ I<ex. CGI>
 I<with Error Check>
 
   my $oGdBar = GD::Barcode::UPCE->new('123456789');
-  die $GD::Barcode::UPCE::errStr unless($oGdBar);	#Invalid Length
+  die $GD::Barcode::UPCE::errStr unless($oGdBar);       #Invalid Length
 
 =head1 DESCRIPTION
 

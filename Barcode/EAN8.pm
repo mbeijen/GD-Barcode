@@ -1,6 +1,6 @@
 package GD::Barcode::EAN8;
 use strict;
-use GD;
+BEGIN { eval{require 'GD.pm';}; };
 use GD::Barcode;
 require Exporter;
 use vars qw($VERSION @ISA $errStr);
@@ -47,22 +47,22 @@ sub new($$) {
 # init (for GD::Barcode::EAN8)
 #------------------------------------------------------------------------------
 sub init($$){
-	my($oThis, $sTxt) =@_;
+        my($oThis, $sTxt) =@_;
 #Check
     return 'Invalid Characters' if($sTxt =~ /[^0-9]/);
 
 #CalcCd
-	if( length($sTxt) == 7 ) {
-		$sTxt .= calcEAN8CD( $sTxt ) ;
-	}
-	elsif(length($sTxt) == 8) {
-		;
-	}
-	else {
-		return 'Invalid Length';
-	}
-	$oThis->{text} = $sTxt;
-	return '';
+        if( length($sTxt) == 7 ) {
+                $sTxt .= calcEAN8CD( $sTxt ) ;
+        }
+        elsif(length($sTxt) == 8) {
+                ;
+        }
+        else {
+                return 'Invalid Length';
+        }
+        $oThis->{text} = $sTxt;
+        return '';
 }
 #------------------------------------------------------------------------------
 # calcEAN8CD (for GD::Barcode::EAN8)
@@ -88,7 +88,7 @@ sub barcode($) {
     my($i, $sRes);
 #(1) Init
   my $sTxt = $oThis->{text};
-  $sRes = $guardBar;		#GUARD
+  $sRes = $guardBar;            #GUARD
 
 #(2) Left 4
   for( $i = 0; $i < 4; $i++ ) {
@@ -118,15 +118,15 @@ sub plot($;%) {
   my $iHeight = ($hParam{Height})? $hParam{Height} : 50;
   my($oGd, $cBlack);
   if($hParam{NoText}) {
-	($oGd, $cBlack) = GD::Barcode::plot($sPtn, length($sPtn), $iHeight, 0, 0);
+        ($oGd, $cBlack) = GD::Barcode::plot($sPtn, length($sPtn), $iHeight, 0, 0);
   }
   else {
-  	my($fW,$fH) = (gdSmallFont->width,gdSmallFont->height);
-	my $iWidth = length($sPtn);
-#$	($oGd, $cBlack) = GD::Barcode::plot($sPtn, $iWidth, $iHeight, $fH, $fW+1);
-	($oGd, $cBlack) = GD::Barcode::plot($sPtn, $iWidth, $iHeight, $fH, 0);
-  	$oGd->string(gdSmallFont, $fW +  1, $iHeight - $fH, substr($oThis->{text}, 0, 4), $cBlack);
-  	$oGd->string(gdSmallFont, $fW + 33, $iHeight - $fH, substr($oThis->{text}, 4, 4), $cBlack);
+        my($fW,$fH) = (GD::Font->Small->width,GD::Font->Small->height);
+        my $iWidth = length($sPtn);
+#$      ($oGd, $cBlack) = GD::Barcode::plot($sPtn, $iWidth, $iHeight, $fH, $fW+1);
+        ($oGd, $cBlack) = GD::Barcode::plot($sPtn, $iWidth, $iHeight, $fH, 0);
+        $oGd->string(GD::Font->Small, $fW +  1, $iHeight - $fH, substr($oThis->{text}, 0, 4), $cBlack);
+        $oGd->string(GD::Font->Small, $fW + 33, $iHeight - $fH, substr($oThis->{text}, 4, 4), $cBlack);
   }
   return $oGd;
 }
@@ -151,7 +151,7 @@ I<ex. CGI>
 I<with Error Check>
 
   my $oGdBar = GD::Barcode::EAN8->new('123456789');
-  die $GD::Barcode::EAN8::errStr unless($oGdBar);	#Invalid Length
+  die $GD::Barcode::EAN8::errStr unless($oGdBar);       #Invalid Length
 
 
 =head1 DESCRIPTION

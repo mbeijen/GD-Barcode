@@ -1,6 +1,6 @@
 package GD::Barcode::EAN13;
 use strict;
-use GD;
+BEGIN { eval{require 'GD.pm';}; };
 use GD::Barcode;
 require Exporter;
 use vars qw($VERSION @ISA $errStr);
@@ -71,21 +71,21 @@ sub new($$) {
 # init (for GD::Barcode::EAN13)
 #------------------------------------------------------------------------------
 sub init($$){
-	my($oThis, $sTxt) =@_;
+        my($oThis, $sTxt) =@_;
 #Check
     return 'Invalid Characters' if($sTxt =~ /[^0-9]/);
 #CalcCd
-	if( length($sTxt) == 12 ) {
-		$sTxt .= calcEAN13CD( $sTxt ) ;
-	}
-	elsif(length($sTxt) == 13) {
-		;
-	}
-	else {
-		return 'Invalid Length';
-	}
-	$oThis->{text} = $sTxt;
-	return '';
+        if( length($sTxt) == 12 ) {
+                $sTxt .= calcEAN13CD( $sTxt ) ;
+        }
+        elsif(length($sTxt) == 13) {
+                ;
+        }
+        else {
+                return 'Invalid Length';
+        }
+        $oThis->{text} = $sTxt;
+        return '';
 }
 #==================================================================
 # Check digit for EAN13
@@ -113,15 +113,15 @@ sub barcode($) {
 
 #(1)Init
   $sTxt = $oThis->{text};
-  $sRes = $guardBar;		#GUARD
+  $sRes = $guardBar;            #GUARD
 
 #(2)Left 7 letters
   $oddEven = $oddEven4EAN->{substr($sTxt, 0, 1)};
   for( $i = 1; $i < 7; $i++ ) {
-	  $sBar = ( substr($oddEven, $i-1, 1) eq 'O')?
-			$leftOddBar : $leftEvenBar;
-	  $sRes .= GD::Barcode::barPtn(
-				substr($sTxt, $i, 1), $sBar);
+          $sBar = ( substr($oddEven, $i-1, 1) eq 'O')?
+                        $leftOddBar : $leftEvenBar;
+          $sRes .= GD::Barcode::barPtn(
+                                substr($sTxt, $i, 1), $sBar);
   }
 #(4)Center
   $sRes .= $centerBar;
@@ -147,15 +147,15 @@ sub plot($;%) {
   my $iHeight = ($hParam{Height})? $hParam{Height} : 50;
   my($oGd, $cBlack);
   if($hParam{NoText}) {
-	($oGd, $cBlack) = GD::Barcode::plot($sPtn, length($sPtn), $iHeight, 0, 0);
+        ($oGd, $cBlack) = GD::Barcode::plot($sPtn, length($sPtn), $iHeight, 0, 0);
   }
   else {
-  	my($fW,$fH) = (gdSmallFont->width,gdSmallFont->height);
-	my $iWidth = length($sPtn)+$fW+1;
-	($oGd, $cBlack) = GD::Barcode::plot($sPtn, $iWidth, $iHeight, $fH, $fW+1);
-  	$oGd->string(gdSmallFont,       0, $iHeight - $fH, substr($oThis->{text}, 0, 1), $cBlack);
-  	$oGd->string(gdSmallFont, $fW +8 , $iHeight - $fH, substr($oThis->{text}, 1, 6), $cBlack);
-  	$oGd->string(gdSmallFont, $fW +55, $iHeight - $fH, substr($oThis->{text}, 7, 6), $cBlack);
+        my($fW,$fH) = (GD::Font->Small->width,GD::Font->Small->height);
+        my $iWidth = length($sPtn)+$fW+1;
+        ($oGd, $cBlack) = GD::Barcode::plot($sPtn, $iWidth, $iHeight, $fH, $fW+1);
+        $oGd->string(GD::Font->Small,       0, $iHeight - $fH, substr($oThis->{text}, 0, 1), $cBlack);
+        $oGd->string(GD::Font->Small, $fW +8 , $iHeight - $fH, substr($oThis->{text}, 1, 6), $cBlack);
+        $oGd->string(GD::Font->Small, $fW +55, $iHeight - $fH, substr($oThis->{text}, 7, 6), $cBlack);
   }
   return $oGd;
 }
@@ -179,7 +179,7 @@ I<ex. CGI>
 I<with Error Check>
 
   my $oGdBar = GD::Barcode::EAN13->new('123456789');
-  die $GD::Barcode::EAN13::errStr unless($oGdBar);	#Invalid Length
+  die $GD::Barcode::EAN13::errStr unless($oGdBar);      #Invalid Length
 
 
 =head1 DESCRIPTION

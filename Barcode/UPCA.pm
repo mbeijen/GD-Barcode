@@ -1,6 +1,6 @@
 package GD::Barcode::UPCA;
 use strict;
-use GD;
+BEGIN { eval{require 'GD.pm';}; };
 use GD::Barcode;
 require Exporter;
 use vars qw($VERSION @ISA $errStr);
@@ -47,22 +47,22 @@ sub new($$) {
 # init (for GD::Barcode::UPCA)
 #------------------------------------------------------------------------------
 sub init($$){
-	my($oThis, $sTxt) =@_;
-	return 'Invalid characters' if($sTxt =~ /[^0-9]/); 
+        my($oThis, $sTxt) =@_;
+        return 'Invalid characters' if($sTxt =~ /[^0-9]/); 
 
 #Check
     my $iLen = length($sTxt);
-	if($iLen == 11) {
-    	$sTxt .= calcUPCACD( $sTxt );
-	}
-	elsif($iLen == 12) {
-		;
-	}
-	else {
-		return 'Invalid Length';
-	}
-	$oThis->{text} = $sTxt;
-	return '';
+        if($iLen == 11) {
+        $sTxt .= calcUPCACD( $sTxt );
+        }
+        elsif($iLen == 12) {
+                ;
+        }
+        else {
+                return 'Invalid Length';
+        }
+        $oThis->{text} = $sTxt;
+        return '';
 }
 #------------------------------------------------------------------------------
 # calcUPCACD (for GD::Barcode::UPCA)
@@ -90,7 +90,7 @@ sub barcode($) {
 
 #(1)Init
   my $sTxt = $oThis->{text};
-  $sRes = $guardBar;		#GUARD
+  $sRes = $guardBar;            #GUARD
 #(2)Left 6 letters
   my $s1st = GD::Barcode::barPtn( substr($sTxt, 0, 1), $leftOddBar );
   $s1st =~ tr/1/G/;
@@ -127,18 +127,18 @@ sub plot($%) {
   my $iHeight = ($hParam{Height})? $hParam{Height} : 50;
   my ($oGd, $cBlack);
   if($hParam{NoText}) {
-	($oGd, $cBlack) = GD::Barcode::plot($sPtn, length($sPtn), $iHeight, 0, 0);
+        ($oGd, $cBlack) = GD::Barcode::plot($sPtn, length($sPtn), $iHeight, 0, 0);
   }
   else {
-	my($fW,$fH) = (gdSmallFont->width, gdSmallFont->height);
-  	my $iWidth = length($sPtn)+ 2*($fW+1);
-	#Bar Image
-  	($oGd, $cBlack) = GD::Barcode::plot($sPtn, $iWidth, $iHeight, $fH, $fW+1);
-	#String
-  	$oGd->string(gdSmallFont,        0, $iHeight - $fH, substr($sTxt, 0, 1), $cBlack);
-  	$oGd->string(gdSmallFont, $fW + 14, $iHeight - $fH, substr($sTxt, 1, 5), $cBlack);
-  	$oGd->string(gdSmallFont, $fW + 53, $iHeight - $fH, substr($sTxt, 6, 5), $cBlack);
-  	$oGd->string(gdSmallFont, $fW + 98, $iHeight - $fH, substr($sTxt,11, 1), $cBlack);
+        my($fW,$fH) = (GD::Font->Small->width, GD::Font->Small->height);
+        my $iWidth = length($sPtn)+ 2*($fW+1);
+        #Bar Image
+        ($oGd, $cBlack) = GD::Barcode::plot($sPtn, $iWidth, $iHeight, $fH, $fW+1);
+        #String
+        $oGd->string(GD::Font->Small,        0, $iHeight - $fH, substr($sTxt, 0, 1), $cBlack);
+        $oGd->string(GD::Font->Small, $fW + 14, $iHeight - $fH, substr($sTxt, 1, 5), $cBlack);
+        $oGd->string(GD::Font->Small, $fW + 53, $iHeight - $fH, substr($sTxt, 6, 5), $cBlack);
+        $oGd->string(GD::Font->Small, $fW + 98, $iHeight - $fH, substr($sTxt,11, 1), $cBlack);
   }
   return $oGd;
 }
@@ -162,7 +162,7 @@ I<ex. CGI>
 I<with Error Check>
 
   my $oGdBar = GD::Barcode::UPCA->new('123456789');
-  die $GD::Barcode::UPCA::errStr unless($oGdBar);	#Invalid Length
+  die $GD::Barcode::UPCA::errStr unless($oGdBar);       #Invalid Length
 
 
 =head1 DESCRIPTION

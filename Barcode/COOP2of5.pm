@@ -1,6 +1,6 @@
 package GD::Barcode::COOP2of5;
 use strict;
-use GD;
+BEGIN { eval{require 'GD.pm';}; };
 use GD::Barcode;
 require Exporter;
 use vars qw($VERSION @ISA $errStr);
@@ -21,12 +21,12 @@ sub new($$) {
 # init (for GD::Barcode::COOP2of5)
 #------------------------------------------------------------------------------
 sub init($$){
-	my($oThis, $sTxt) =@_;
+        my($oThis, $sTxt) =@_;
 #Check
     return 'Invalid Characters' if($sTxt =~ /[^0-9]/);
 
-	$oThis->{text} = $sTxt;
-	return '';
+        $oThis->{text} = $sTxt;
+        return '';
 }
 #------------------------------------------------------------------------------
 # new (for GD::Barcode::COOP2of5)
@@ -39,7 +39,7 @@ sub barcodeWk($) {
       $sRes .= (substr($sPtn, $i, 1) eq '1')? $sClr x 3 : $sClr;
       $sClr = ($sClr eq '1')? '0': '1';
     }
-	return $sRes;
+        return $sRes;
 }
 sub barcode($) {
     my ($oThis) = @_;
@@ -62,8 +62,8 @@ sub barcode($) {
     };
   $sRes = barcodeWk($rhPtn->{START});
   for( $i = 0; $i < length($sTxt); $i++ ){
-		$sRes .= '0'; #GAP
-		$sRes .= barcodeWk($rhPtn->{substr($sTxt, $i, 1)});
+                $sRes .= '0'; #GAP
+                $sRes .= barcodeWk($rhPtn->{substr($sTxt, $i, 1)});
   }
   $sRes .= '0'; #GAP
   $sRes .= barcodeWk($rhPtn->{STOP});
@@ -83,17 +83,17 @@ sub plot($;%) {
   my $iHeight = ($hParam{Height})? $hParam{Height} : 50;
   my($oGd, $cBlack);
   if($hParam{NoText}) {
-	($oGd, $cBlack) = GD::Barcode::plot($sPtn, length($sPtn), $iHeight, 0, 0);
+        ($oGd, $cBlack) = GD::Barcode::plot($sPtn, length($sPtn), $iHeight, 0, 0);
   }
   else {
-	my($fW,$fH) = (gdSmallFont->width, gdSmallFont->height);
-  	my $iWidth = length($sPtn);
-	#Bar Image
-  	($oGd, $cBlack) = GD::Barcode::plot($sPtn, $iWidth, $iHeight, $fH, 0);
+        my($fW,$fH) = (GD::Font->Small->width, GD::Font->Small->height);
+        my $iWidth = length($sPtn);
+        #Bar Image
+        ($oGd, $cBlack) = GD::Barcode::plot($sPtn, $iWidth, $iHeight, $fH, 0);
 
-	#String
-  	$oGd->string(gdSmallFont, (length($sPtn)-$fW*(length($sTxtWk)))/2, $iHeight - $fH, 
-			$sTxtWk, $cBlack);
+        #String
+        $oGd->string(GD::Font->Small, (length($sPtn)-$fW*(length($sTxtWk)))/2, $iHeight - $fH, 
+                        $sTxtWk, $cBlack);
   }
   return $oGd;
 }
@@ -118,7 +118,7 @@ I<ex. CGI>
 I<with Error Check>
 
   my $oGdBar = GD::Barcode::COOP2of5->new('A12345678');
-  die $GD::Barcode::COOP2of5::errStr unless($oGdBar);	#Invalid Characters
+  die $GD::Barcode::COOP2of5::errStr unless($oGdBar);   #Invalid Characters
   $oGdBar->plot->png;
 
 
