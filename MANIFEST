@@ -1,8 +1,12 @@
 Barcode.pm
+Barcode/COOP2of5.pm
 Barcode/Code39.pm
 Barcode/EAN13.pm
 Barcode/EAN8.pm
+Barcode/IATA2of5.pm
 Barcode/ITF.pm
+Barcode/Industrial2of5.pm
+Barcode/Matrix2of5.pm
 Barcode/NW7.pm
 Barcode/UPCA.pm
 Barcode/UPCE.pm
@@ -10,10 +14,14 @@ Changes
 MANIFEST
 Makefile.PL
 README
+sample/COOP2of5.png
 sample/Code39.png
 sample/EAN13.png
 sample/EAN8.png
+sample/IATA2of5.png
 sample/ITF.png
+sample/Industrial2of5.png
+sample/Matrix2of5.png
 sample/NW7.png
 sample/UPCA.png
 sample/UPCE.png

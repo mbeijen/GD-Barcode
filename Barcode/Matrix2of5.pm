@@ -1,4 +1,4 @@
-package GD::Barcode::ITF;
+package GD::Barcode::Matrix2of5;
 use strict;
 use GD;
 use GD::Barcode;
@@ -7,7 +7,7 @@ use vars qw($VERSION @ISA $errStr);
 @ISA = qw(GD::Barcode Exporter);
 $VERSION=0.01;
 #------------------------------------------------------------------------------
-# new (for GD::Barcode::ITF)
+# new (for GD::Barcode::Matrix2of5)
 #------------------------------------------------------------------------------
 sub new($$) {
   my($sClass, $sTxt) = @_;
@@ -18,70 +18,60 @@ sub new($$) {
   return $oThis;
 }
 #------------------------------------------------------------------------------
-# init (for GD::Barcode::ITF)
+# init (for GD::Barcode::Matrix2of5)
 #------------------------------------------------------------------------------
 sub init($$){
 	my($oThis, $sTxt) =@_;
 #Check
     return 'Invalid Characters' if($sTxt =~ /[^0-9]/);
 
-#Not Set Chec
-	if( length($sTxt) %2 ) {
-		$sTxt .= calcITFCD($sTxt)
-	}
 	$oThis->{text} = $sTxt;
 	return '';
 }
 #------------------------------------------------------------------------------
-# calcITFCD (for GD::Barcode::ITF)
+# new (for GD::Barcode::Matrix2of5)
 #------------------------------------------------------------------------------
-sub calcITFCD($) {
-  my( $sTxt ) = @_;
-  my( $i, $iSum);
-
-  $iSum = 0;
-  for( $i = 0; $i < length($sTxt); $i++ ){
-      $iSum += substr($sTxt, $i, 1)  * (($i%2)? 1: 3);
-  }
-  $iSum %= 10;
-  $iSum = ($iSum == 0)? 0: (10 - $iSum);
-  return "$iSum";
+sub barcodeWk($) {
+    my($sPtn) =@_;
+    my $sRes = '';
+    my $sClr = '1';
+    for(my $i=0; $i< length($sPtn); $i++) {
+      $sRes .= (substr($sPtn, $i, 1) eq '1')? $sClr x 3 : $sClr;
+      $sClr = ($sClr eq '1')? '0': '1';
+    }
+	return $sRes;
 }
-#------------------------------------------------------------------------------
-# new (for GD::Barcode::ITF)
-#------------------------------------------------------------------------------
 sub barcode($) {
     my ($oThis) = @_;
-    my($i, $sRes);
+    my $i;
+    my $sRes;
     my $sTxt = $oThis->{text};
     my $rhPtn ={
-        '0' => '00110',
-        '1' => '10001',
-        '2' => '01001',
-        '3' => '11000',
-        '4' => '00101',
-        '5' => '10100',
-        '6' => '01100',
-        '7' => '00011',
-        '8' => '10010',
-        '9' => '01010'
+        'START' => '10000',
+        '0'     => '00110',
+        '1'     => '10001',
+        '2'     => '01001',
+        '3'     => '11000',
+        '4'     => '00101',
+        '5'     => '10100',
+        '6'     => '01100',
+        '7'     => '00011',
+        '8'     => '10010',
+        '9'     => '01010',
+        'STOP'  => '10000',
     };
-
-  $sRes = '';
-  $sRes .= '1010';  #START
-  for( $i = 0; $i < length($sTxt); $i+=2 ){
-      my $sBlack = $rhPtn->{substr($sTxt, $i, 1)};
-      my $sWhite = $rhPtn->{substr($sTxt, $i+1, 1)};
-      for(my $j = 0; $j < length($sBlack); $j++) {
-		$sRes .= (substr($sBlack, $j, 1) eq '1')? '1' x 3: '1';
-		$sRes .= (substr($sWhite, $j, 1) eq '1')? '0' x 3: '0';
-	  }
+  $sRes = barcodeWk($rhPtn->{START});
+  for( $i = 0; $i < length($sTxt); $i++ ){
+		$sRes .= '0'; #GAP
+		$sRes .= barcodeWk($rhPtn->{substr($sTxt, $i, 1)});
   }
-  $sRes .= '1' x 3 . '01';  #STOP
+  $sRes .= '0'; #GAP
+  $sRes .= barcodeWk($rhPtn->{STOP});
   return $sRes;
 }
+
 #------------------------------------------------------------------------------
-# plot (for GD::Barcode::ITF)
+# plot (for GD::Barcode::Matrix2of5)
 #------------------------------------------------------------------------------
 sub plot($;%) {
   my($oThis, %hParam) =@_;
@@ -114,35 +104,35 @@ __END__
 
 =head1 NAME
 
-GD::Barcode::ITF - Create ITF(Interleaved2of5) barcode image with GD
+GD::Barcode::Matrix2of5 - Create Matrix2of5 barcode image with GD
 
 =head1 SYNOPSIS
 
 I<ex. CGI>
 
-  use GD::Barcode::ITF;
+  use GD::Barcode::Matrix2of5;
   binmode(STDOUT);
   print "Content-Type: image/png\n\n";
-  print GD::Barcode::ITF->new('1234567890')->plot->png;
+  print GD::Barcode::Matrix2of5->new('1234567890')->plot->png;
 
 I<with Error Check>
 
-  my $oGdBar = GD::Barcode::ITF->new('A12345678');
-  die $GD::Barcode::ITF::errStr unless($oGdBar);	#Invalid Characters
+  my $oGdBar = GD::Barcode::Matrix2of5->new('A12345678');
+  die $GD::Barcode::Matrix2of5::errStr unless($oGdBar);	#Invalid Characters
   $oGdBar->plot->png;
 
 
 =head1 DESCRIPTION
 
-GD::Barcode::ITF is a subclass of GD::Barcode and allows you to
-create ITF barcode image with GD.
+GD::Barcode::Matrix2of5 is a subclass of GD::Barcode and allows you to
+create Matrix2of5 barcode image with GD.
 
 =head2 new
 
-I<$oGdBar> = GD::Barcode::ITF->new(I<$sTxt>);
+I<$oGdBar> = GD::Barcode::Matrix2of5->new(I<$sTxt>);
 
 Constructor. 
-Creates a GD::Barcode::ITF object for I<$sTxt>.
+Creates a GD::Barcode::Matrix2of5 object for I<$sTxt>.
 I<$sTxt> has numeric characters([0-9]).
 
 =head2 plot()
@@ -153,7 +143,7 @@ creates GD object with barcode image for the I<$sTxt> specified at L<new> method
 I<$iHeight> is height of the image. If I<NoText> is 1, the image has no text image of I<$sTxt>.
 
  ex.
-  my $oGdB = GD::Barcode::ITF->new('12345678');
+  my $oGdB = GD::Barcode::Matrix2of5->new('12345678');
   my $oGD = $oGdB->plot(NoText=>1, Height => 20);
   # $sGD is a GD image with Height=>20 pixels, with no text.
 
@@ -165,12 +155,12 @@ returns a barcode pattern in string with '1' and '0'.
 '1' means black, '0' means white.
 
  ex.
-  my $oGdB = GD::Barcode::ITF->new('12345678');
+  my $oGdB = GD::Barcode::Matrix2of5->new('12345678');
   my $sPtn = $oGdB->barcode();
 
 =head2 $errStr
 
-$GD::Barcode::ITF::errStr
+$GD::Barcode::Matrix2of5::errStr
 
 has error message.
 
@@ -186,7 +176,7 @@ Kawai Takanori GCD00051@nifty.ne.jp
 
 =head1 COPYRIGHT
 
-The GD::Barocde::ITF module is Copyright (c) 2000 Kawai Takanori. Japan.
+The GD::Barocde::Matrix2of5 module is Copyright (c) 2000 Kawai Takanori. Japan.
 All rights reserved.
 
 You may distribute under the terms of either the GNU General Public

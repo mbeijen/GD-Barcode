@@ -3,7 +3,7 @@ require Exporter;
 use strict;
 use vars qw($VERSION @ISA $errStr);
 @ISA = qw(Exporter);
-$VERSION=1.12;
+$VERSION=1.13;
 my @aLoaded = ();
 #------------------------------------------------------------------------------
 # new (for Spreadsheet::ParseExcel)
@@ -112,6 +112,7 @@ I<with Error Check>
 =head1 DESCRIPTION
 
 GD::Barcode is a subclass of GD and allows you to create barcode image with GD.
+This module based on "Generate Barcode Ver 1.02 By Shisei Hanai 97/08/22".
 
 =head2 new
 
@@ -159,6 +160,14 @@ has barcode text based on I<$sTxt> specified in L<new> method.
 =head1 AUTHOR
 
 Kawai Takanori GCD00051@nifty.ne.jp
+
+=head1 COPYRIGHT
+
+The GD::Barocde module is Copyright (c) 2000 Kawai Takanori. Japan.
+All rights reserved.
+
+You may distribute under the terms of either the GNU General Public
+License or the Artistic License, as specified in the Perl README file.
 
 =head1 SEE ALSO
 
