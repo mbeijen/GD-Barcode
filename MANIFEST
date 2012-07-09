@@ -187,7 +187,6 @@ lib/GD/Barcode/UPCE.pm
 Changes
 Makefile.PL
 MANIFEST			This list of files
-META.yml
 README
 sample/Code39.png
 sample/COOP2of5.png
