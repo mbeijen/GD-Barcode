@@ -81,13 +81,6 @@ sub plot($$$$$) {
   };
   return ($gdNew, $cBlack);
 }
-#------------------------------------------------------------------------------
-# Text (for GD::Barcode)
-#------------------------------------------------------------------------------
-sub Text($) {
-        my($oThis) = @_;
-        return $oThis->{text};
-}
 1;
 __END__
 
@@ -130,7 +123,7 @@ Creates a GD::Barcode::I<$sType> object for I<$sTxt>.
 
 I<$oGd> = $oGdBar->plot([Height => I<$iHeight>, NoText => I<0 | 1>]);
 
-creates GD object with barcode image for the I<$sTxt> specified at L<new> method.
+creates GD object with barcode image for the I<$sTxt> specified at L</new> method.
 I<$iHeight> is height of the image. If I<NoText> is 1, the image has no text image of I<$sTxt>.
 
  ex.
@@ -160,7 +153,7 @@ has error message.
 
 $oGdBar->{$text}
 
-has barcode text based on I<$sTxt> specified in L<new> method.
+has barcode text based on I<$sTxt> specified in L</new> method.
 
 =head1 AUTHOR
 
