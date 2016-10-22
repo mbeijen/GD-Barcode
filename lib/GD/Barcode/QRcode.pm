@@ -37,7 +37,7 @@ sub init($$$){
     $oSelf->{text} = $sTxt;
     $oSelf->{Ecc} = $rhPrm->{Ecc} || ' ';
     $oSelf->{Ecc} =~ tr/LMHQ/M/c;    #Not /LMQH/ => M
-    $oSelf->{Version} = ($rhPrm->{Version}) ? 1 || 0;
+    $oSelf->{Version} = $rhPrm->{Version} || 0;
     $oSelf->{ModuleSize} = $rhPrm->{ModuleSize} || 1;
     $oSelf->{ModuleSize} = int($oSelf->{ModuleSize});
 
