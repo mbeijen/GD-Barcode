@@ -8,7 +8,7 @@ use GD::Barcode;
 require Exporter;
 use vars qw($VERSION @ISA $errStr);
 @ISA     = qw(GD::Barcode Exporter);
-$VERSION = 0.01;
+$VERSION = '1.99_01';
 
 #------------------------------------------------------------------------------
 # new (for GD::Barcode::Industrial2of5)

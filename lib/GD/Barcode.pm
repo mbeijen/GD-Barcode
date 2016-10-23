@@ -3,7 +3,7 @@ require Exporter;
 use strict;
 use vars qw($VERSION @ISA $errStr);
 @ISA     = qw(Exporter);
-$VERSION = 1.15;
+$VERSION = '1.99_01';
 my @aLoaded = ();
 
 #------------------------------------------------------------------------------

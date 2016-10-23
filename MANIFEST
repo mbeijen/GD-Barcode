@@ -1,3 +1,4 @@
+Changes
 lib/GD/Barcode.pm
 lib/GD/Barcode/Code39.pm
 lib/GD/Barcode/COOP2of5.pm
@@ -184,9 +185,9 @@ lib/GD/Barcode/QRcode/rsc28.dat
 lib/GD/Barcode/QRcode/rsc30.dat
 lib/GD/Barcode/UPCA.pm
 lib/GD/Barcode/UPCE.pm
-Changes
 Makefile.PL
 MANIFEST			This list of files
+MANIFEST.SKIP
 README
 sample/Code39.png
 sample/COOP2of5.png
@@ -209,4 +210,6 @@ sample/smp_all.pl
 sample/smp_ind.pl
 sample/UPCA.png
 sample/UPCE.png
-t/test.t
+t/compile.t
+t/png_barcode.t
+t/pod.t

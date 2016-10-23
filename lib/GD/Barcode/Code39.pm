@@ -9,7 +9,7 @@ use GD::Barcode;
 require Exporter;
 use vars qw($VERSION @ISA $errStr);
 @ISA     = qw(GD::Barcode Exporter);
-$VERSION = 1.10;
+$VERSION = '1.99_01';
 my $code39Bar = {
     '0' => '00011010ß0',
     '1' => '100100001',

@@ -1,6 +1,6 @@
 Revision history for Perl extension GD::Barcode.
 
-1.16  xx 2012
+1.99_01 2016-10-23 (DEVELOPMENT RELEASE)
         - Moved modules to lib/
         - Specified correct dependencies.
         - Fixed RT#20297 - Auto-size with 'Version'.
