@@ -212,4 +212,4 @@ sample/UPCA.png
 sample/UPCE.png
 t/compile.t
 t/png_barcode.t
-t/pod.t
+xt/pod.t
