@@ -11,7 +11,7 @@ use vars qw($VERSION @ISA $errStr);
 @ISA     = qw(GD::Barcode Exporter);
 $VERSION = '1.99_01';
 my $code39Bar = {
-    '0' => '00011010ß0',
+    '0' => '000110100',
     '1' => '100100001',
     '2' => '001100001',
     '3' => '101100000',
