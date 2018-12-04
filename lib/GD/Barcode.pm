@@ -69,6 +69,7 @@ sub plot($$$$$) {
         $gdNew = GD::Image->new( $iWidth, $iHeight );
         $cWhite = $gdNew->colorAllocate( 255, 255, 255 );
         $cBlack = $gdNew->colorAllocate( 0,   0,   0 );
+        $gdNew->filledRectangle( 0, 0, $iWidth, $iHeight, $cWhite );
 
         my $iPos = $iStart;
         foreach my $cWk ( split( //, $sBarcode ) ) {
