@@ -1,41 +1,25 @@
 # GD::Barcode::QRcode 1.20 Edited (^^;;; by Hippo2000
 #    based on QRcode image CGI    version 0.50   (C)2000-2002,Y.Swetake
 use strict;
+use warnings;
 
 package GD::Barcode::QRcode;
 
-BEGIN {
-    eval { require 'GD.pm'; };
-}
-require Exporter;
+use parent qw(Exporter);
 use vars qw($VERSION @ISA $errStr);
 @ISA     = qw(GD::Barcode Exporter);
 $VERSION = '1.99_01';
 
-#Prototype
-sub _calcVersion($$$);
-sub _calcMask($$$);
-sub _cnv8bit($$$$);
-sub _cnvAlphaNumeric($$$$);
-sub _cnvNumeric($$$$);
-sub _calcFrm($$$);
-
-#------------------------------------------------------------------------------
-# new (for GD::Barcode::QR)
-#------------------------------------------------------------------------------
-sub new($$;$) {
+sub new {
     my ( $sClass, $sTxt, $rhPrm ) = @_;
     $errStr = '';
     my $oSelf = {};
-    bless $oSelf;
-    return undef if ( $errStr = $oSelf->init( $sTxt, $rhPrm ) );
+    bless $oSelf, $sClass;
+    return if ( $errStr = $oSelf->init( $sTxt, $rhPrm ) );
     return $oSelf;
 }
 
-#------------------------------------------------------------------------------
-# init (for GD::Barcode::QR)
-#------------------------------------------------------------------------------
-sub init($$$) {
+sub init {
     my ( $oSelf, $sTxt, $rhPrm ) = @_;
 
     #CalcCd
@@ -283,10 +267,7 @@ sub init($$$) {
     return '';
 }
 
-#------------------------------------------------------------------------------
-# barcode (for GD::Barcode::QR)
-#------------------------------------------------------------------------------
-sub barcode($) {
+sub barcode {
     my ($oSelf) = @_;
     my $sBarL;
     my $iModSize = $oSelf->{ModuleSize};
@@ -315,10 +296,7 @@ sub barcode($) {
     return $sPtn;
 }
 
-#------------------------------------------------------------------------------
-# plot (for GD::Barcode::QRcode)
-#------------------------------------------------------------------------------
-sub plot($;%) {
+sub plot {
     my ( $oSelf, %hParam ) = @_;
     my $iUnitSize = $oSelf->{ModuleSize};
     my $oOutImg   = GD::Image->new(
@@ -351,7 +329,7 @@ sub plot($;%) {
     return $oOutImg;
 }
 
-sub _calcVersion($$$) {
+sub _calcVersion {
     my ( $oSelf, $iTtlBits, $raPlusWords ) = @_;
 
     my %hMaxDatBits = (
@@ -420,7 +398,7 @@ sub _calcVersion($$$) {
     );
 }
 
-sub _calcMask($$$) {
+sub _calcMask {
     my ( $oSelf, $sHorMst, $sVerMst ) = @_;
     use constant SPCHAR => "\xAA";
 
@@ -503,7 +481,7 @@ sub _calcMask($$$) {
     return $iMask;
 }
 
-sub _cnv8bit($$$$) {
+sub _cnv8bit {
     my ( $oSelf, $iDatCnt, $raDatVal, $raDatBit ) = @_;
 
     my $iDatLen = length( $oSelf->{text} );
@@ -528,7 +506,7 @@ sub _cnv8bit($$$$) {
     );
 }
 
-sub _cnvAlphaNumeric($$$$) {
+sub _cnvAlphaNumeric {
     my ( $oSelf, $iDatCnt, $raDatVal, $raDatBit ) = @_;
 
     my $iDatLen = length( $oSelf->{text} );
@@ -610,7 +588,7 @@ sub _cnvAlphaNumeric($$$$) {
     );
 }
 
-sub _cnvNumeric($$$$) {
+sub _cnvNumeric {
     my ( $oSelf, $iDatCnt, $raDatVal, $raDatBit ) = @_;
 
     my $iDatLen = length( $oSelf->{text} );
@@ -649,7 +627,7 @@ sub _cnvNumeric($$$$) {
     );
 }
 
-sub _calcFrm($$$) {
+sub _calcFrm {
     my ( $iV, $iR, $iC ) = @_;
     my $iPosR = $iV * 4 + 10;
     if ( $iR == 0 ) {

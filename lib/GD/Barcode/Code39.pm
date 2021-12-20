@@ -1,15 +1,12 @@
 package GD::Barcode::Code39;
 use strict;
+use warnings;
 
-#use GD;
-BEGIN {
-    eval { require 'GD.pm'; };
-}
 use GD::Barcode;
-require Exporter;
+use parent qw(Exporter);
 use vars qw($VERSION @ISA $errStr);
 @ISA     = qw(GD::Barcode Exporter);
-$VERSION = '1.99_01';
+our $VERSION = '1.99_01';
 my $code39Bar = {
     '0' => '000110100',
     '1' => '100100001',
@@ -57,22 +54,16 @@ my $code39Bar = {
     ' ' => '011000100'
 };
 
-#------------------------------------------------------------------------------
-# new (for GD::Barcode::Code39)
-#------------------------------------------------------------------------------
-sub new($$) {
+sub new {
     my ( $sClass, $sTxt ) = @_;
     $errStr = '';
     my $oThis = {};
-    bless $oThis;
-    return undef if ( $errStr = $oThis->init($sTxt) );
+    bless $oThis, $sClass;
+    return if ( $errStr = $oThis->init($sTxt) );
     return $oThis;
 }
 
-#------------------------------------------------------------------------------
-# init (for GD::Barcode::Code39)
-#------------------------------------------------------------------------------
-sub init($$) {
+sub init {
     my ( $oThis, $sTxt ) = @_;
 
     #Check
@@ -81,31 +72,23 @@ sub init($$) {
     return '';
 }
 
-#------------------------------------------------------------------------------
-# barcode (for GD::Barcode::Code39)
-#------------------------------------------------------------------------------
-sub barcode($) {
+sub barcode {
     my ($oThis) = @_;
     my ($sTxt);
     my ( $sWk, $sRes );
 
-    #       $sTxt = '*'. $oThis->{text} . '*';
     $sTxt = $oThis->{text};
     $sRes = '';
-    foreach $sWk ( split( //, $sTxt ) ) {
+    foreach my $sWk ( split( //, $sTxt ) ) {
         $sRes .= GD::Barcode::dumpCode( $code39Bar->{$sWk} . '0' );
     }
     return $sRes;
 }
 
-#------------------------------------------------------------------------------
-# plot (for GD::Barcode::Code39)
-#------------------------------------------------------------------------------
-sub plot($;%) {
+sub plot {
     my ( $oThis, %hParam ) = @_;
 
     #Barcode Pattern
-    #  my $sTxtWk = '*' . $oThis->{text} . '*';
     my $sTxtWk = $oThis->{text};
     my $sPtn   = $oThis->barcode();
 
@@ -117,6 +100,7 @@ sub plot($;%) {
           GD::Barcode::plot( $sPtn, length($sPtn), $iHeight, 0, 0 );
     }
     else {
+        require GD;
         my ( $fW, $fH ) = ( GD::Font->Small->width, GD::Font->Small->height );
         my $iWidth = length($sPtn);
 

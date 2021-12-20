@@ -1,66 +1,53 @@
 package GD::Barcode;
-require Exporter;
+use parent qw(Exporter);
 use strict;
-use vars qw($VERSION @ISA $errStr);
-@ISA     = qw(Exporter);
-$VERSION = '1.99_01';
-my @aLoaded = ();
+use warnings;
 
-#------------------------------------------------------------------------------
-# new (for GD::Barcode)
-#------------------------------------------------------------------------------
-sub new($$$;$) {
+use vars qw( @ISA $errStr);
+use parent qw(Exporter);
+our $VERSION = '1.99_01';
+
+sub new {
     my ( $sClass, $sType, $sTxt, $rhPrm ) = @_;
     my $oThis = {};
-    unless ( grep( /^$sType$/, @aLoaded ) ) {
-        eval "require 'GD/Barcode/$sType.pm';";
-        if ($@) {
-            $errStr = "Can't load $sType : $@";
-            return undef;
-        }
-        push( @aLoaded, $sType );
+    my $module = "GD::Barcode::$sType";
+    eval "require $module;";
+    if ($@) {
+        $errStr = "Can't load $sType : $@";
+        return;
     }
-    bless $oThis, "GD::Barcode::$sType";
-    return undef if ( $errStr = $oThis->init( $sTxt, $rhPrm ) );
+    bless $oThis, $module;
+    return if ( $errStr = $oThis->init( $sTxt, $rhPrm ) );
     return $oThis;
 }
 
-#------------------------------------------------------------------------------
-# barPtn (for GD::Barcode)
-#------------------------------------------------------------------------------
 sub barPtn {
     my ( $bar, $table ) = @_;
-    my ( $sWk, $sRes );
+    my $sRes;
 
     $sRes = '';
-    foreach $sWk ( split( //, $bar ) ) {
+    foreach my $sWk ( split( //, $bar ) ) {
         $sRes .= $table->{$sWk};
     }
     return $sRes;
 }
 
-#------------------------------------------------------------------------------
-# dumpCode (for GD::Barcode) for Code39, NW7...
-#------------------------------------------------------------------------------
 sub dumpCode {
     my ($sCode) = @_;
-    my ( $sWk, $sRes, $sClr );
+    my ( $sRes, $sClr );
 
     #Init
     $sRes = '';
     $sClr = '1';    # 1: Black, 0:White
 
-    foreach $sWk ( split( //, $sCode ) ) {
+    foreach my $sWk ( split( //, $sCode ) ) {
         $sRes .= ( $sWk eq '1' ) ? $sClr x 3 : $sClr;    #3 times or Normal
         $sClr = ( $sClr eq '0' ) ? '1' : '0';
     }
     return $sRes;
 }
 
-#------------------------------------------------------------------------------
-# plot (for GD::Barcode)
-#------------------------------------------------------------------------------
-sub plot($$$$$) {
+sub plot {
     my ( $sBarcode, $iWidth, $iHeight, $fH, $iStart ) = @_;
 
     #Create Image

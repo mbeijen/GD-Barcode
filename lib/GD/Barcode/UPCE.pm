@@ -1,11 +1,8 @@
 package GD::Barcode::UPCE;
 use strict;
 
-BEGIN {
-    eval { require 'GD.pm'; };
-}
 use GD::Barcode;
-require Exporter;
+use parent qw(Exporter);
 use vars qw($VERSION @ISA $errStr);
 @ISA     = qw(GD::Barcode Exporter);
 $VERSION = '1.99_01';
@@ -48,22 +45,16 @@ my $leftEvenBar = {
 my $guardBar         = 'G0G';
 my $UPCrightGuardBar = '0G0G0G';
 
-#------------------------------------------------------------------------------
-# new (for Spreadsheet::ParseExcel)
-#------------------------------------------------------------------------------
-sub new($$) {
+sub new {
     my ( $sClass, $sTxt ) = @_;
     $errStr = '';
     my $oThis = {};
-    bless $oThis;
-    return undef if ( $errStr = $oThis->init($sTxt) );
+    bless $oThis, $sClass;
+    return if ( $errStr = $oThis->init($sTxt) );
     return $oThis;
 }
 
-#------------------------------------------------------------------------------
-# init (for Spreadsheet::ParseExcel)
-#------------------------------------------------------------------------------
-sub init($$) {
+sub init {
     my ( $oThis, $sTxt ) = @_;
     return 'Invalid characters' if ( $sTxt =~ /[^0-9]/ );
 
@@ -86,9 +77,6 @@ sub init($$) {
     return '';
 }
 
-#------------------------------------------------------------------------------
-# calcUPCACD (for GD::Barcode::UPCE)
-#------------------------------------------------------------------------------
 sub calcUPCACD {
     my ($sTxt) = @_;
     my ( $i, $iSum, @aWeight );
@@ -103,9 +91,6 @@ sub calcUPCACD {
     return "$iSum";
 }
 
-#------------------------------------------------------------------------------
-# calcUPCECD (for GD::Barcode::UPCE)
-#------------------------------------------------------------------------------
 sub calcUPCECD {
     my ($sTxt) = @_;
     my ($upcA);
@@ -127,10 +112,7 @@ sub calcUPCECD {
     return &calcUPCACD($upcA);
 }
 
-#------------------------------------------------------------------------------
-# barcode (for GD::Barcode::UPCE)
-#------------------------------------------------------------------------------
-sub barcode($) {
+sub barcode {
     my ($oThis) = @_;
     my ( $topDigit, $oddEven, $c, $i );
     my ($sRes);
@@ -154,15 +136,13 @@ sub barcode($) {
 
 }
 
-#------------------------------------------------------------------------------
-# plot (for Spreadsheet::ParseExcel)
-#------------------------------------------------------------------------------
-sub plot($%) {
+sub plot {
     my ( $oThis, %hParam ) = @_;
     my $sTxt = $oThis->{text};
     my $sPtn = $oThis->barcode();
 
     #Create Image
+    require GD;
     my $iHeight = ( $hParam{Height} ) ? $hParam{Height} : 50;
     my ( $oGd, $cBlack );
     if ( $hParam{NoText} ) {
@@ -194,8 +174,6 @@ sub plot($%) {
             substr( $sTxt, 7, 1 ), $cBlack
         );
     }
-    return $oGd;
-
     return $oGd;
 }
 1;

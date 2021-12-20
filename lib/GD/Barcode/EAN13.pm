@@ -1,14 +1,14 @@
 package GD::Barcode::EAN13;
-use strict;
 
-BEGIN {
-    eval { require 'GD.pm'; };
-}
+use strict;
+use warnings;
+
 use GD::Barcode;
-require Exporter;
+
+our $VERSION = '1.99_01';
+use parent qw(Exporter);
 use vars qw($VERSION @ISA $errStr);
 @ISA     = qw(GD::Barcode Exporter);
-$VERSION = '1.99_01';
 my $leftOddBar = {
     '0' => '0001101',
     '1' => '0011001',
@@ -60,22 +60,16 @@ my $oddEven4EAN = {
     9 => 'OEEOEO'
 };
 
-#------------------------------------------------------------------------------
-# new (for GD::Barcode::EAN13)
-#------------------------------------------------------------------------------
-sub new($$) {
+sub new {
     my ( $sClass, $sTxt ) = @_;
     $errStr = '';
     my $oThis = {};
-    bless $oThis;
-    return undef if ( $errStr = $oThis->init($sTxt) );
+    bless $oThis, $sClass;
+    return if ( $errStr = $oThis->init($sTxt) );
     return $oThis;
 }
 
-#------------------------------------------------------------------------------
-# init (for GD::Barcode::EAN13)
-#------------------------------------------------------------------------------
-sub init($$) {
+sub init {
     my ( $oThis, $sTxt ) = @_;
 
     #Check
@@ -95,10 +89,7 @@ sub init($$) {
     return '';
 }
 
-#==================================================================
-# Check digit for EAN13
-#==================================================================
-sub calcEAN13CD($) {
+sub calcEAN13CD {
     my ($sTxt) = @_;
     my ( $i, $iSum );
     my @aWeight = ( 1, 3, 1, 3, 1, 3, 1, 3, 1, 3, 1, 3 );
@@ -111,10 +102,7 @@ sub calcEAN13CD($) {
     return "$iSum";
 }
 
-#------------------------------------------------------------------------------
-# barcode (for GD::Barcode::EAN13)
-#------------------------------------------------------------------------------
-sub barcode($) {
+sub barcode {
     my ($oThis) = @_;
     my ($sTxt);
     my ( $oddEven, $i, $sBar );
@@ -145,16 +133,14 @@ sub barcode($) {
     return $sRes;
 }
 
-#------------------------------------------------------------------------------
-# plot (for GD::Barcode::EAN13)
-#------------------------------------------------------------------------------
-sub plot($;%) {
+sub plot {
     my ( $oThis, %hParam ) = @_;
 
     #Barcode Pattern
     my $sPtn = $oThis->barcode();
 
     #Create Image
+    require GD;
     my $iHeight = ( $hParam{Height} ) ? $hParam{Height} : 50;
     my ( $oGd, $cBlack );
     if ( $hParam{NoText} ) {

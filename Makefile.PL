@@ -7,13 +7,14 @@ WriteMakefile(
     ABSTRACT_FROM     => 'lib/GD/Barcode.pm',
     PREREQ_PM => {
         Exporter => 0,
+        parent   => 0,
     },
-    INSTALLDIRS        => 'perl',
+    TEST_REQUIRES => {
+        "Test2::V0" => "0.000060",
+    },
+    INSTALLDIRS => ($] < 5.011 ? 'perl' : 'site'),
     LICENSE            => 'perl',
     AUTHOR             => 'Kawai Takanori <GCD00051@nifty.ne.jp>',
-    "test" => {
-        "TESTS" => "t/*.t"
-    },
     META_MERGE => {
         resources => {
             repository => 'https://github.com/mbeijen/GD-Barcode',

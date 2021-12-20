@@ -1,31 +1,23 @@
 package GD::Barcode::COOP2of5;
 use strict;
+use warnings;
 
-BEGIN {
-    eval { require 'GD.pm'; };
-}
 use GD::Barcode;
-require Exporter;
+use parent qw(Exporter);
 use vars qw($VERSION @ISA $errStr);
 @ISA     = qw(GD::Barcode Exporter);
-$VERSION = '1.99_01';
+our $VERSION = '1.99_01';
 
-#------------------------------------------------------------------------------
-# new (for GD::Barcode::COOP2of5)
-#------------------------------------------------------------------------------
-sub new($$) {
+sub new {
     my ( $sClass, $sTxt ) = @_;
     $errStr = '';
     my $oThis = {};
-    bless $oThis;
-    return undef if ( $errStr = $oThis->init($sTxt) );
+    bless $oThis, $sClass;
+    return if ( $errStr = $oThis->init($sTxt) );
     return $oThis;
 }
 
-#------------------------------------------------------------------------------
-# init (for GD::Barcode::COOP2of5)
-#------------------------------------------------------------------------------
-sub init($$) {
+sub init {
     my ( $oThis, $sTxt ) = @_;
 
     #Check
@@ -35,10 +27,7 @@ sub init($$) {
     return '';
 }
 
-#------------------------------------------------------------------------------
-# new (for GD::Barcode::COOP2of5)
-#------------------------------------------------------------------------------
-sub barcodeWk($) {
+sub barcodeWk {
     my ($sPtn) = @_;
     my $sRes   = '';
     my $sClr   = '1';
@@ -49,7 +38,7 @@ sub barcodeWk($) {
     return $sRes;
 }
 
-sub barcode($) {
+sub barcode {
     my ($oThis) = @_;
     my $i;
     my $sRes;
@@ -78,10 +67,7 @@ sub barcode($) {
     return $sRes;
 }
 
-#------------------------------------------------------------------------------
-# plot (for GD::Barcode::COOP2of5)
-#------------------------------------------------------------------------------
-sub plot($;%) {
+sub plot {
     my ( $oThis, %hParam ) = @_;
 
     my $sTxtWk = $oThis->{text};
@@ -103,6 +89,7 @@ sub plot($;%) {
           GD::Barcode::plot( $sPtn, $iWidth, $iHeight, $fH, 0 );
 
         #String
+        require GD;
         $oGd->string(
             GD::Font->Small,
             ( length($sPtn) - $fW * ( length($sTxtWk) ) ) / 2,

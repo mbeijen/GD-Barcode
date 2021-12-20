@@ -1,14 +1,12 @@
 package GD::Barcode::NW7;
 use strict;
+use warnings;
 
-BEGIN {
-    eval { require 'GD.pm'; };
-}
 use GD::Barcode;
-require Exporter;
+use parent qw(Exporter);
 use vars qw($VERSION @ISA $errStr);
 @ISA     = qw(GD::Barcode Exporter);
-$VERSION = '1.99_01';
+our $VERSION = '1.99_01';
 my $nw7Bar = {
     '0' => '0000011',
     '1' => '0000110',
@@ -32,22 +30,16 @@ my $nw7Bar = {
     'D' => '0001110'
 };
 
-#------------------------------------------------------------------------------
-# new (for GD::Barcode::NW7)
-#------------------------------------------------------------------------------
-sub new($$) {
+sub new {
     my ( $sClass, $sTxt ) = @_;
     $errStr = '';
     my $oThis = {};
-    bless $oThis;
-    return undef if ( $errStr = $oThis->init($sTxt) );
+    bless $oThis, $sClass;
+    return if ( $errStr = $oThis->init($sTxt) );
     return $oThis;
 }
 
-#------------------------------------------------------------------------------
-# init (for GD::Barcode::NW7)
-#------------------------------------------------------------------------------
-sub init($$\%) {
+sub init {
     my ( $oThis, $sTxt ) = @_;
 
     #Check
@@ -58,25 +50,18 @@ sub init($$\%) {
     return '';
 }
 
-#------------------------------------------------------------------------------
-# barcode (for GD::Barcode::NW7)
-#------------------------------------------------------------------------------
-sub barcode($) {
+sub barcode {
     my ($oThis) = @_;
-    my ( $sWk, $sRes );
 
     my $sTxt = $oThis->{text};
-    $sRes = '';
-    foreach $sWk ( split( //, $sTxt ) ) {
+    my $sRes = '';
+    foreach my $sWk ( split( //, $sTxt ) ) {
         $sRes .= GD::Barcode::dumpCode( $nw7Bar->{$sWk} . '0' );
     }
     return $sRes;
 }
 
-#------------------------------------------------------------------------------
-# plot (for GD::Barcode::NW7)
-#------------------------------------------------------------------------------
-sub plot($%) {
+sub plot {
     my ( $oThis, %hParam ) = @_;
 
     my $sTxt = $oThis->{text};
@@ -108,9 +93,8 @@ sub plot($%) {
     return $oGd;
 }
 1;
+
 __END__
-
-
 
 =head1 NAME
 

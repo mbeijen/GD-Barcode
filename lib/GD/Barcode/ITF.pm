@@ -1,31 +1,23 @@
 package GD::Barcode::ITF;
 use strict;
+use warnings;
 
-BEGIN {
-    eval { require 'GD.pm'; };
-}
 use GD::Barcode;
-require Exporter;
+use parent qw(Exporter);
 use vars qw($VERSION @ISA $errStr);
 @ISA     = qw(GD::Barcode Exporter);
-$VERSION = '1.99_01';
+our $VERSION = '1.99_01';
 
-#------------------------------------------------------------------------------
-# new (for GD::Barcode::ITF)
-#------------------------------------------------------------------------------
-sub new($$) {
+sub new {
     my ( $sClass, $sTxt ) = @_;
     $errStr = '';
     my $oThis = {};
-    bless $oThis;
-    return undef if ( $errStr = $oThis->init($sTxt) );
+    bless $oThis, $sClass;
+    return if ( $errStr = $oThis->init($sTxt) );
     return $oThis;
 }
 
-#------------------------------------------------------------------------------
-# init (for GD::Barcode::ITF)
-#------------------------------------------------------------------------------
-sub init($$) {
+sub init {
     my ( $oThis, $sTxt ) = @_;
 
     #Check
@@ -39,10 +31,7 @@ sub init($$) {
     return '';
 }
 
-#------------------------------------------------------------------------------
-# calcITFCD (for GD::Barcode::ITF)
-#------------------------------------------------------------------------------
-sub calcITFCD($) {
+sub calcITFCD {
     my ($sTxt) = @_;
     my ( $i, $iSum );
 
@@ -55,10 +44,7 @@ sub calcITFCD($) {
     return "$iSum";
 }
 
-#------------------------------------------------------------------------------
-# new (for GD::Barcode::ITF)
-#------------------------------------------------------------------------------
-sub barcode($) {
+sub barcode {
     my ($oThis) = @_;
     my ( $i, $sRes );
     my $sTxt  = $oThis->{text};
@@ -89,16 +75,14 @@ sub barcode($) {
     return $sRes;
 }
 
-#------------------------------------------------------------------------------
-# plot (for GD::Barcode::ITF)
-#------------------------------------------------------------------------------
-sub plot($;%) {
+sub plot {
     my ( $oThis, %hParam ) = @_;
 
     my $sTxtWk = $oThis->{text};
     my $sPtn   = $oThis->barcode();
 
     #Create Image
+    require GD;
     my $iHeight = ( $hParam{Height} ) ? $hParam{Height} : 50;
     my ( $oGd, $cBlack );
     if ( $hParam{NoText} ) {
@@ -125,7 +109,6 @@ sub plot($;%) {
 }
 1;
 __END__
-
 
 
 =head1 NAME
