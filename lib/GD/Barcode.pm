@@ -5,7 +5,7 @@ use warnings;
 
 use vars qw( @ISA $errStr);
 use parent qw(Exporter);
-our $VERSION = '1.99_01';
+our $VERSION = '1.99_02';
 
 sub new {
     my ( $sClass, $sType, $sTxt, $rhPrm ) = @_;

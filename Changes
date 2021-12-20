@@ -1,5 +1,12 @@
 Revision history for Perl extension GD::Barcode.
 
+
+1.99_02 2021-12-20 (DEVELOPMENT RELEASE)
+        - Fix issue with Code39 barcodes that prevent rendering white
+          background in some cases by Boris Zentner
+        - Add unit tests
+        - Modernize code
+
 1.99_01 2016-10-23 (DEVELOPMENT RELEASE)
         - Moved modules to lib/
         - Specified correct dependencies.
