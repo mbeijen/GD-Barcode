@@ -5,7 +5,7 @@ use GD::Barcode;
 use parent qw(Exporter);
 use vars qw($VERSION @ISA $errStr);
 @ISA     = qw(GD::Barcode Exporter);
-$VERSION = '1.99_02';
+$VERSION = '1.99_03';
 my $oddEven4UPCE = {
     0 => 'EEEOOO',
     1 => 'EEOEOO',

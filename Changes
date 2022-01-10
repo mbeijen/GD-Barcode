@@ -1,5 +1,9 @@
 Revision history for Perl extension GD::Barcode.
 
+1.99_03 2022-01-10 (DEVELOPMENT RELEASE)
+        - Fix cpantesters test for Business::ISBN failing
+          seemingly because of broken version of Business::ISBN:
+          require Business::ISBN 3.007 or later
 
 1.99_02 2021-12-20 (DEVELOPMENT RELEASE)
         - Fix issue with Code39 barcodes that prevent rendering white
