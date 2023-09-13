@@ -8,7 +8,7 @@ package GD::Barcode::QRcode;
 use parent qw(Exporter);
 use vars qw($VERSION @ISA $errStr);
 @ISA     = qw(GD::Barcode Exporter);
-$VERSION = '1.99_03';
+$VERSION = '2.00';
 
 sub new {
     my ( $sClass, $sTxt, $rhPrm ) = @_;

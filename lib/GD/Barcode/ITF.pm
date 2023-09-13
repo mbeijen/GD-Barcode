@@ -6,7 +6,7 @@ use GD::Barcode;
 use parent qw(Exporter);
 use vars qw($VERSION @ISA $errStr);
 @ISA     = qw(GD::Barcode Exporter);
-our $VERSION = '1.99_03';
+our $VERSION = '2.00';
 
 sub new {
     my ( $sClass, $sTxt ) = @_;
