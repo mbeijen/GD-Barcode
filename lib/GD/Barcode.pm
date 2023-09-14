@@ -155,7 +155,7 @@ Kawai Takanori GCD00051@nifty.ne.jp
 
 =head1 COPYRIGHT
 
-The GD::Barocde module is Copyright (c) 2000 Kawai Takanori. Japan.
+The GD::Barcode module is Copyright (c) 2000 Kawai Takanori. Japan.
 All rights reserved.
 
 You may distribute under the terms of either the GNU General Public
