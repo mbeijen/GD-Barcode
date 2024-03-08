@@ -122,7 +122,7 @@ sub init {
         while ($iFlg) {
             if ( $iRestBits > $iBuffBit ) {
                 $aCodeWords[$iCodeWords] =
-                  ( ( $aCodeWords[$iCodeWords] << $iBuffBit ) | $sBuff );
+                  ( ( ( $aCodeWords[$iCodeWords] // 0 ) << $iBuffBit ) | $sBuff );
                 $iRestBits -= $iBuffBit;
                 $iFlg = 0;
             }
@@ -214,8 +214,8 @@ sub init {
     for ( my $iMatrixRemain = $iRemainBits ; $iMatrixRemain ; $iMatrixRemain-- )
     {
         my $iRemainBitTmp = $iMatrixRemain + ( $iMaxCodeWords * 8 );
-        $aCont[ $aMatrixX[$iRemainBitTmp] ][ $aMatrixY[$iRemainBitTmp] ] =
-          ( 255 ^ $aMask[$iRemainBitTmp] );
+        $aCont[ $aMatrixX[$iRemainBitTmp] // 0 ][ $aMatrixY[$iRemainBitTmp] // 0 ] =
+          ( 255 ^ ( $aMask[$iRemainBitTmp] // 0 ) );
     }
 
     # ---- mask select
