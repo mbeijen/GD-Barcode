@@ -5051,7 +5051,7 @@ __END__
 
 =head1 NAME
 
-GD::Barcode::QRcode - Create QRcode barcode image with GD
+GD::Barcode::QRcode - Create QRcode barcode images with GD
 
 =head1 SYNOPSIS
 
@@ -5065,14 +5065,14 @@ I<ex. CGI>
 I<with UnitSize, ECC settings>
 
   my $oGdBar = GD::Barcode::QRcode->new('123456789',
-                            { Ecc => 'L', Version=>2, ModuleSize => 2}
+                            { Ecc => 'L', Version=>2, ModuleSize => 20}
                         );
 
 
 =head1 DESCRIPTION
 
 GD::Barcode::QRcode is a subclass of GD::Barcode and allows you to
-create QRcode barcode image with GD.
+create QRcode barcode images with GD.
 This module based on "QRcode image CGI version 0.50 (C)2000-2002,Y.Swetake".
 
 =head2 new
