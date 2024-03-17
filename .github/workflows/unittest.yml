@@ -39,5 +39,5 @@ jobs:
         run: cpm install -g -v --no-test --with-all --show-build-log-on-failure
       - name: Makefile.PL
         run: perl Makefile.PL
-      - name: make test
-        run: make test
+      - name: run tests
+        run: prove -lr
