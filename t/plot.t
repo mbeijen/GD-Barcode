@@ -1,17 +1,17 @@
 use Test2::V0;
-use Test2::Require::Module 'GD';
 
-use GD::Barcode::QRcode;
+use GD::Barcode;
 use File::Temp qw(tempfile);
 use File::stat;
 
-my $qrcode = GD::Barcode::QRcode->new('https://github.com/mbeijen/GD-Barcode/commit/af0ac08c05df03c2088e3f472633d9249c4883ca',
-{ModuleSize => 1});
-ok($qrcode, 'QRcode');
+use Test2::Require::Module 'GD';
+
+
+my $oGdBar = GD::Barcode->new("EAN13", "123456789012");
 
 my ($fh, $filename) = tempfile();
 binmode $fh;
-print $fh $qrcode->plot->png;
+print $fh $oGdBar->plot->png;
 close $fh;
 
 my $filesize = stat($filename)->size;
