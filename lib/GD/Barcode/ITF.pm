@@ -23,7 +23,7 @@ sub init {
     #Check
     return 'Invalid Characters' if ( $sTxt =~ /[^0-9]/ );
 
-    #Not Set Chec
+    #Not Set Check
     if ( length($sTxt) % 2 ) {
         $sTxt .= calcITFCD($sTxt);
     }
