@@ -298,6 +298,7 @@ sub barcode {
 
 sub plot {
     my ( $oSelf, %hParam ) = @_;
+    require GD;
     my $iUnitSize = $oSelf->{ModuleSize};
     my $oOutImg   = GD::Image->new(
         ( $oSelf->{MaxModules} + 8 ) * $iUnitSize,
