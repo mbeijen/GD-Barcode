@@ -72,4 +72,6 @@ cpanfile
 webapp
 ^\.githooks/
 ^\.perltidyrc$
+^\.git-blame-ignore-revs$
 ^scripts/
+^DEVELOPING\.md$

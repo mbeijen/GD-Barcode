@@ -87,19 +87,10 @@ $oGdBar->{text}
 
 Contains the barcode text based on `$sTxt` specified in the `new` method.
 
-## Git Hooks
+## Contributing
 
-A repository-managed pre-commit hook is provided in
-[.githooks/pre-commit](.githooks/pre-commit) to run perltidy before each commit.
-
-Install hooks for this clone with:
-
-```bash
-./scripts/install-git-hooks.sh
-```
-
-This sets git `core.hooksPath` to `.githooks` and enables automatic formatting
-of tracked Perl files on commit.
+For information about code formatting, git hooks, and testing, see
+[DEVELOPING.md](DEVELOPING.md).
 
 ## Author
 
