@@ -12,14 +12,21 @@ fi
 
 mapfile -t perl_files < <(git ls-files '*.pm' '*.pl' '*.t' 'Makefile.PL')
 
-if [[ ${#perl_files[@]} -eq 0 ]]; then
-  exit 0
+if [[ ${#perl_files[@]} -gt 0 ]]; then
+  echo "pre-commit: formatting Perl files with perltidy..."
+  perltidy -b -bext=.ptidy.bak "${perl_files[@]}"
+  find . -name '*.ptidy.bak' -delete
+  git add "${perl_files[@]}"
 fi
 
-echo "pre-commit: formatting Perl files with perltidy..."
-perltidy -b -bext=.ptidy.bak "${perl_files[@]}"
-find . -name '*.ptidy.bak' -delete
-
-git add "${perl_files[@]}"
+# Format Markdown files if mdformat is installed
+if command -v mdformat >/dev/null 2>&1; then
+  mapfile -t md_files < <(git ls-files '*.md')
+  if [[ ${#md_files[@]} -gt 0 ]]; then
+    echo "pre-commit: formatting Markdown files with mdformat..."
+    mdformat --wrap 80 "${md_files[@]}"
+    git add "${md_files[@]}"
+  fi
+fi
 
 echo "pre-commit: formatting complete."

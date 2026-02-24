@@ -23,9 +23,11 @@ $oGdBar->plot->png;
 
 ## Description
 
-GD::Barcode is a subclass of GD and allows you to create barcode images with GD. This module is based on "Generate Barcode Ver 1.02 By Shisei Hanai 97/08/22".
+GD::Barcode is a subclass of GD and allows you to create barcode images with GD.
+This module is based on "Generate Barcode Ver 1.02 By Shisei Hanai 97/08/22".
 
-From version 1.14, you can use this module even without GD (except the plot method).
+From version 1.14, you can use this module even without GD (except the plot
+method).
 
 ### new
 
@@ -41,7 +43,9 @@ Constructor. Creates a `GD::Barcode::$sType` object for `$sTxt`.
 $oGd = $oGdBar->plot(Height => $iHeight, NoText => 0 | 1);
 ```
 
-Creates a GD object with barcode image for the `$sTxt` specified in the `new` method. `$iHeight` is the height of the image. If `NoText` is 1, the image has no text representation of `$sTxt`.
+Creates a GD object with barcode image for the `$sTxt` specified in the `new`
+method. `$iHeight` is the height of the image. If `NoText` is 1, the image has
+no text representation of `$sTxt`.
 
 **Example:**
 
@@ -57,7 +61,8 @@ my $oGD = $oGdB->plot(NoText=>1, Height => 20);
 $sPtn = $oGdBar->barcode();
 ```
 
-Returns a barcode pattern as a string with '1' and '0'. '1' means black, '0' means white.
+Returns a barcode pattern as a string with '1' and '0'. '1' means black, '0'
+means white.
 
 **Example:**
 
@@ -84,7 +89,8 @@ Contains the barcode text based on `$sTxt` specified in the `new` method.
 
 ## Git Hooks
 
-A repository-managed pre-commit hook is provided in [.githooks/pre-commit](.githooks/pre-commit) to run perltidy before each commit.
+A repository-managed pre-commit hook is provided in
+[.githooks/pre-commit](.githooks/pre-commit) to run perltidy before each commit.
 
 Install hooks for this clone with:
 
@@ -92,7 +98,8 @@ Install hooks for this clone with:
 ./scripts/install-git-hooks.sh
 ```
 
-This sets git `core.hooksPath` to `.githooks` and enables automatic formatting of tracked Perl files on commit.
+This sets git `core.hooksPath` to `.githooks` and enables automatic formatting
+of tracked Perl files on commit.
 
 ## Author
 
@@ -100,9 +107,11 @@ Kawai Takanori GCD00051@nifty.ne.jp
 
 ## Copyright
 
-The GD::Barcode module is Copyright (c) 2000 Kawai Takanori. Japan. All rights reserved.
+The GD::Barcode module is Copyright (c) 2000 Kawai Takanori. Japan. All rights
+reserved.
 
-You may distribute under the terms of either the GNU General Public License or the Artistic License, as specified in the Perl README file.
+You may distribute under the terms of either the GNU General Public License or
+the Artistic License, as specified in the Perl README file.
 
 ## See Also
 
