@@ -1,0 +1,5 @@
+# This file contains commits that should be ignored by git blame
+# Configure with: git config blame.ignoreRevsFile .git-blame-ignore-revs
+
+# Apply perltidy formatting and improve code style
+e568e1a633a06e62e884c9603897a80ec2b56750
