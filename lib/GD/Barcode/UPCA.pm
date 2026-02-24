@@ -116,7 +116,6 @@ sub plot {
     my $sPtn = $oThis->barcode();
 
     #Create Image
-    require GD;
     my $iHeight = ( $hParam{Height} ) ? $hParam{Height} : 50;
     my ( $oGd, $cBlack );
     if ( $hParam{NoText} ) {
@@ -124,6 +123,7 @@ sub plot {
           GD::Barcode::plot( $sPtn, length($sPtn), $iHeight, 0, 0 );
     }
     else {
+        require GD;
         my ( $fW, $fH ) = ( GD::Font->Small->width, GD::Font->Small->height );
         my $iWidth = length($sPtn) + 2 * ( $fW + 1 );
 

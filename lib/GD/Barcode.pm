@@ -49,6 +49,7 @@ sub dumpCode {
 
 sub plot {
     my ( $sBarcode, $iWidth, $iHeight, $fH, $iStart ) = @_;
+    require GD;
 
     #Create Image
     my ( $gdNew, $cWhite, $cBlack );

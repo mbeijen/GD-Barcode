@@ -81,6 +81,7 @@ sub plot {
           GD::Barcode::plot( $sPtn, length($sPtn), $iHeight, 0, 0 );
     }
     else {
+        require GD;
         my ( $fW, $fH ) = ( GD::Font->Small->width, GD::Font->Small->height );
         my $iWidth = length($sPtn);
 
@@ -89,7 +90,6 @@ sub plot {
           GD::Barcode::plot( $sPtn, $iWidth, $iHeight, $fH, 0 );
 
         #String
-        require GD;
         $oGd->string(
             GD::Font->Small,
             ( length($sPtn) - $fW * ( length($sTxtWk) ) ) / 2,
