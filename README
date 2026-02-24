@@ -60,6 +60,18 @@ DESCRIPTION
 
     has barcode text based on *$sTxt* specified in "new" method.
 
+GIT HOOKS
+    A repository-managed pre-commit hook is provided in
+    [.githooks/pre-commit](.githooks/pre-commit) to run perltidy before each
+    commit.
+
+    Install hooks for this clone with:
+
+      ./script/install-git-hooks.sh
+
+    This sets git core.hooksPath to .githooks and enables automatic
+    formatting of tracked Perl files on commit.
+
 AUTHOR
     Kawai Takanori GCD00051@nifty.ne.jp
 

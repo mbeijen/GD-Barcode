@@ -6,7 +6,6 @@ use File::stat;
 
 use Test2::Require::Module 'GD';
 
-
 my $oGdBar = GD::Barcode->new("EAN13", "123456789012");
 
 my ($fh, $filename) = tempfile();

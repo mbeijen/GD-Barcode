@@ -7,8 +7,8 @@ use GD::Barcode;
 
 our $VERSION = '2.02';
 use parent qw(Exporter);
-use vars qw($VERSION @ISA $errStr);
-@ISA     = qw(GD::Barcode Exporter);
+use vars   qw($VERSION @ISA $errStr);
+@ISA = qw(GD::Barcode Exporter);
 my $leftOddBar = {
     '0' => '0001101',
     '1' => '0011001',
@@ -61,25 +61,25 @@ my $oddEven4EAN = {
 };
 
 sub new {
-    my ( $sClass, $sTxt ) = @_;
+    my ($sClass, $sTxt) = @_;
     $errStr = '';
     my $oThis = {};
     bless $oThis, $sClass;
-    return if ( $errStr = $oThis->init($sTxt) );
+    return if ($errStr = $oThis->init($sTxt));
     return $oThis;
 }
 
 sub init {
-    my ( $oThis, $sTxt ) = @_;
+    my ($oThis, $sTxt) = @_;
 
-    #Check
-    return 'Invalid Characters' if ( $sTxt =~ /[^0-9]/ );
+    # Check
+    return 'Invalid Characters' if ($sTxt =~ /[^0-9]/);
 
-    #CalcCd
-    if ( length($sTxt) == 12 ) {
+    # CalcCd
+    if (length($sTxt) == 12) {
         $sTxt .= calcEAN13CD($sTxt);
     }
-    elsif ( length($sTxt) == 13 ) {
+    elsif (length($sTxt) == 13) {
         ;
     }
     else {
@@ -91,82 +91,68 @@ sub init {
 
 sub calcEAN13CD {
     my ($sTxt) = @_;
-    my ( $i, $iSum );
-    my @aWeight = ( 1, 3, 1, 3, 1, 3, 1, 3, 1, 3, 1, 3 );
+    my ($i, $iSum);
+    my @aWeight = (1, 3, 1, 3, 1, 3, 1, 3, 1, 3, 1, 3);
     $iSum = 0;
-    for ( $i = 0 ; $i < 12 ; $i++ ) {
-        $iSum += substr( $sTxt, $i, 1 ) * $aWeight[$i];
+    for ($i = 0; $i < 12; $i++) {
+        $iSum += substr($sTxt, $i, 1) * $aWeight[$i];
     }
     $iSum %= 10;
-    $iSum = ( $iSum == 0 ) ? 0 : ( 10 - $iSum );
+    $iSum = ($iSum == 0) ? 0 : (10 - $iSum);
     return "$iSum";
 }
 
 sub barcode {
     my ($oThis) = @_;
     my ($sTxt);
-    my ( $oddEven, $i, $sBar );
+    my ($oddEven, $i, $sBar);
     my ($sRes);
 
-    #(1)Init
+    # (1)Init
     $sTxt = $oThis->{text};
     $sRes = $guardBar;        #GUARD
 
-    #(2)Left 7 letters
-    $oddEven = $oddEven4EAN->{ substr( $sTxt, 0, 1 ) };
-    for ( $i = 1 ; $i < 7 ; $i++ ) {
-        $sBar =
-          ( substr( $oddEven, $i - 1, 1 ) eq 'O' ) ? $leftOddBar : $leftEvenBar;
-        $sRes .= GD::Barcode::barPtn( substr( $sTxt, $i, 1 ), $sBar );
+    # (2)Left 7 letters
+    $oddEven = $oddEven4EAN->{ substr($sTxt, 0, 1) };
+    for ($i = 1; $i < 7; $i++) {
+        $sBar = (substr($oddEven, $i - 1, 1) eq 'O') ? $leftOddBar : $leftEvenBar;
+        $sRes .= GD::Barcode::barPtn(substr($sTxt, $i, 1), $sBar);
     }
 
-    #(4)Center
+    # (4)Center
     $sRes .= $centerBar;
 
-    #(5)Right
-    for ( $i = 7 ; $i < 13 ; $i++ ) {
-        $sRes .= GD::Barcode::barPtn( substr( $sTxt, $i, 1 ), $rightBar );
+    # (5)Right
+    for ($i = 7; $i < 13; $i++) {
+        $sRes .= GD::Barcode::barPtn(substr($sTxt, $i, 1), $rightBar);
     }
 
-    #(6)GUARD
+    # (6)GUARD
     $sRes .= $guardBar;
     return $sRes;
 }
 
 sub plot {
-    my ( $oThis, %hParam ) = @_;
+    my ($oThis, %hParam) = @_;
 
-    #Barcode Pattern
+    # Barcode Pattern
     my $sPtn = $oThis->barcode();
 
-    #Create Image
-    my $iHeight = ( $hParam{Height} ) ? $hParam{Height} : 50;
-    my ( $oGd, $cBlack );
-    if ( $hParam{NoText} ) {
-        ( $oGd, $cBlack ) =
-          GD::Barcode::plot( $sPtn, length($sPtn), $iHeight, 0, 0 );
+    # Create Image
+    my $iHeight = ($hParam{Height}) ? $hParam{Height} : 50;
+    my ($oGd, $cBlack);
+    if ($hParam{NoText}) {
+        ($oGd, $cBlack)
+            = GD::Barcode::plot($sPtn, length($sPtn), $iHeight, 0, 0);
     }
     else {
         require GD;
-        my ( $fW, $fH ) = ( GD::Font->Small->width, GD::Font->Small->height );
+        my ($fW, $fH) = (GD::Font->Small->width, GD::Font->Small->height);
         my $iWidth = length($sPtn) + $fW + 1;
-        ( $oGd, $cBlack ) =
-          GD::Barcode::plot( $sPtn, $iWidth, $iHeight, $fH, $fW + 1 );
-        $oGd->string(
-            GD::Font->Small, 0,
-            $iHeight - $fH,
-            substr( $oThis->{text}, 0, 1 ), $cBlack
-        );
-        $oGd->string(
-            GD::Font->Small, $fW + 8,
-            $iHeight - $fH,
-            substr( $oThis->{text}, 1, 6 ), $cBlack
-        );
-        $oGd->string(
-            GD::Font->Small, $fW + 55,
-            $iHeight - $fH,
-            substr( $oThis->{text}, 7, 6 ), $cBlack
-        );
+        ($oGd, $cBlack) = GD::Barcode::plot($sPtn, $iWidth, $iHeight, $fH, $fW + 1);
+        $oGd->string(GD::Font->Small, 0,        $iHeight - $fH, substr($oThis->{text}, 0, 1), $cBlack);
+        $oGd->string(GD::Font->Small, $fW + 8,  $iHeight - $fH, substr($oThis->{text}, 1, 6), $cBlack);
+        $oGd->string(GD::Font->Small, $fW + 55, $iHeight - $fH, substr($oThis->{text}, 7, 6), $cBlack);
     }
     return $oGd;
 }

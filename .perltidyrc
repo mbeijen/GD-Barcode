@@ -1,0 +1,7 @@
+# PBP-oriented profile with tighter vertical container formatting
+-pbp
+-nst
+-l=120
+-vt=0
+-vtc=0
+-pt=2

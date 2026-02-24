@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+repo_root="$(git rev-parse --show-toplevel)"
+cd "$repo_root"
+
+if ! command -v perltidy >/dev/null 2>&1; then
+  echo "pre-commit: perltidy not found in PATH" >&2
+  echo "Install perltidy or bypass with: git commit --no-verify" >&2
+  exit 1
+fi
+
+mapfile -t perl_files < <(git ls-files '*.pm' '*.pl' '*.t' 'Makefile.PL')
+
+if [[ ${#perl_files[@]} -eq 0 ]]; then
+  exit 0
+fi
+
+echo "pre-commit: formatting Perl files with perltidy..."
+perltidy -b -bext=.ptidy.bak "${perl_files[@]}"
+find . -name '*.ptidy.bak' -delete
+
+git add "${perl_files[@]}"
+
+echo "pre-commit: formatting complete."

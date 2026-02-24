@@ -4,27 +4,27 @@ use warnings;
 
 use GD::Barcode;
 use parent qw(Exporter);
-use vars qw($VERSION @ISA $errStr);
-@ISA     = qw(GD::Barcode Exporter);
+use vars   qw($VERSION @ISA $errStr);
+@ISA = qw(GD::Barcode Exporter);
 our $VERSION = '2.02';
 
 sub new {
-    my ( $sClass, $sTxt ) = @_;
+    my ($sClass, $sTxt) = @_;
     $errStr = '';
     my $oThis = {};
     bless $oThis, $sClass;
-    return if ( $errStr = $oThis->init($sTxt) );
+    return if ($errStr = $oThis->init($sTxt));
     return $oThis;
 }
 
 sub init {
-    my ( $oThis, $sTxt ) = @_;
+    my ($oThis, $sTxt) = @_;
 
-    #Check
-    return 'Invalid Characters' if ( $sTxt =~ /[^0-9]/ );
+    # Check
+    return 'Invalid Characters' if ($sTxt =~ /[^0-9]/);
 
-    #Not Set Check
-    if ( length($sTxt) % 2 ) {
+    # Not Set Check
+    if (length($sTxt) % 2) {
         $sTxt .= calcITFCD($sTxt);
     }
     $oThis->{text} = $sTxt;
@@ -33,20 +33,20 @@ sub init {
 
 sub calcITFCD {
     my ($sTxt) = @_;
-    my ( $i, $iSum );
+    my ($i, $iSum);
 
     $iSum = 0;
-    for ( $i = 0 ; $i < length($sTxt) ; $i++ ) {
-        $iSum += substr( $sTxt, $i, 1 ) * ( ( $i % 2 ) ? 1 : 3 );
+    for ($i = 0; $i < length($sTxt); $i++) {
+        $iSum += substr($sTxt, $i, 1) * (($i % 2) ? 1 : 3);
     }
     $iSum %= 10;
-    $iSum = ( $iSum == 0 ) ? 0 : ( 10 - $iSum );
+    $iSum = ($iSum == 0) ? 0 : (10 - $iSum);
     return "$iSum";
 }
 
 sub barcode {
     my ($oThis) = @_;
-    my ( $i, $sRes );
+    my ($i, $sRes);
     my $sTxt  = $oThis->{text};
     my $rhPtn = {
         '0' => '00110',
@@ -63,12 +63,12 @@ sub barcode {
 
     $sRes = '';
     $sRes .= '1010';    #START
-    for ( $i = 0 ; $i < length($sTxt) ; $i += 2 ) {
-        my $sBlack = $rhPtn->{ substr( $sTxt, $i,     1 ) };
-        my $sWhite = $rhPtn->{ substr( $sTxt, $i + 1, 1 ) };
-        for ( my $j = 0 ; $j < length($sBlack) ; $j++ ) {
-            $sRes .= ( substr( $sBlack, $j, 1 ) eq '1' ) ? '1' x 3 : '1';
-            $sRes .= ( substr( $sWhite, $j, 1 ) eq '1' ) ? '0' x 3 : '0';
+    for ($i = 0; $i < length($sTxt); $i += 2) {
+        my $sBlack = $rhPtn->{ substr($sTxt, $i,     1) };
+        my $sWhite = $rhPtn->{ substr($sTxt, $i + 1, 1) };
+        for (my $j = 0; $j < length($sBlack); $j++) {
+            $sRes .= (substr($sBlack, $j, 1) eq '1') ? '1' x 3 : '1';
+            $sRes .= (substr($sWhite, $j, 1) eq '1') ? '0' x 3 : '0';
         }
     }
     $sRes .= '1' x 3 . '01';    #STOP
@@ -76,34 +76,28 @@ sub barcode {
 }
 
 sub plot {
-    my ( $oThis, %hParam ) = @_;
+    my ($oThis, %hParam) = @_;
 
     my $sTxtWk = $oThis->{text};
     my $sPtn   = $oThis->barcode();
 
-    #Create Image
-    my $iHeight = ( $hParam{Height} ) ? $hParam{Height} : 50;
-    my ( $oGd, $cBlack );
-    if ( $hParam{NoText} ) {
-        ( $oGd, $cBlack ) =
-          GD::Barcode::plot( $sPtn, length($sPtn), $iHeight, 0, 0 );
+    # Create Image
+    my $iHeight = ($hParam{Height}) ? $hParam{Height} : 50;
+    my ($oGd, $cBlack);
+    if ($hParam{NoText}) {
+        ($oGd, $cBlack)
+            = GD::Barcode::plot($sPtn, length($sPtn), $iHeight, 0, 0);
     }
     else {
         require GD;
-        my ( $fW, $fH ) = ( GD::Font->Small->width, GD::Font->Small->height );
+        my ($fW, $fH) = (GD::Font->Small->width, GD::Font->Small->height);
         my $iWidth = length($sPtn);
 
-        #Bar Image
-        ( $oGd, $cBlack ) =
-          GD::Barcode::plot( $sPtn, $iWidth, $iHeight, $fH, 0 );
+        # Bar Image
+        ($oGd, $cBlack) = GD::Barcode::plot($sPtn, $iWidth, $iHeight, $fH, 0);
 
-        #String
-        $oGd->string(
-            GD::Font->Small,
-            ( length($sPtn) - $fW * ( length($sTxtWk) ) ) / 2,
-            $iHeight - $fH,
-            $sTxtWk, $cBlack
-        );
+        # String
+        $oGd->string(GD::Font->Small, (length($sPtn) - $fW * (length($sTxtWk))) / 2, $iHeight - $fH, $sTxtWk, $cBlack);
     }
     return $oGd;
 }

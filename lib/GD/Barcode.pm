@@ -3,13 +3,13 @@ use parent qw(Exporter);
 use strict;
 use warnings;
 
-use vars qw( @ISA $errStr);
+use vars   qw( @ISA $errStr);
 use parent qw(Exporter);
 our $VERSION = '2.02';
 
 sub new {
-    my ( $sClass, $sType, $sTxt, $rhPrm ) = @_;
-    my $oThis = {};
+    my ($sClass, $sType, $sTxt, $rhPrm) = @_;
+    my $oThis  = {};
     my $module = "GD::Barcode::$sType";
     eval "require $module;";
     if ($@) {
@@ -17,16 +17,16 @@ sub new {
         return;
     }
     bless $oThis, $module;
-    return if ( $errStr = $oThis->init( $sTxt, $rhPrm ) );
+    return if ($errStr = $oThis->init($sTxt, $rhPrm));
     return $oThis;
 }
 
 sub barPtn {
-    my ( $bar, $table ) = @_;
+    my ($bar, $table) = @_;
     my $sRes;
 
     $sRes = '';
-    foreach my $sWk ( split( //, $bar ) ) {
+    foreach my $sWk (split(//, $bar)) {
         $sRes .= $table->{$sWk};
     }
     return $sRes;
@@ -34,47 +34,46 @@ sub barPtn {
 
 sub dumpCode {
     my ($sCode) = @_;
-    my ( $sRes, $sClr );
+    my ($sRes, $sClr);
 
-    #Init
+    # Init
     $sRes = '';
     $sClr = '1';    # 1: Black, 0:White
 
-    foreach my $sWk ( split( //, $sCode ) ) {
-        $sRes .= ( $sWk eq '1' ) ? $sClr x 3 : $sClr;    #3 times or Normal
-        $sClr = ( $sClr eq '0' ) ? '1' : '0';
+    foreach my $sWk (split(//, $sCode)) {
+        $sRes .= ($sWk eq '1') ? $sClr x 3 : $sClr;    #3 times or Normal
+        $sClr = ($sClr eq '0') ? '1' : '0';
     }
     return $sRes;
 }
 
 sub plot {
-    my ( $sBarcode, $iWidth, $iHeight, $fH, $iStart ) = @_;
+    my ($sBarcode, $iWidth, $iHeight, $fH, $iStart) = @_;
     require GD;
 
-    #Create Image
-    my ( $gdNew, $cWhite, $cBlack );
+    # Create Image
+    my ($gdNew, $cWhite, $cBlack);
     eval {
-        $gdNew = GD::Image->new( $iWidth, $iHeight );
-        $cWhite = $gdNew->colorAllocate( 255, 255, 255 );
-        $cBlack = $gdNew->colorAllocate( 0,   0,   0 );
-        $gdNew->filledRectangle( 0, 0, $iWidth, $iHeight, $cWhite );
+        $gdNew  = GD::Image->new($iWidth, $iHeight);
+        $cWhite = $gdNew->colorAllocate(255, 255, 255);
+        $cBlack = $gdNew->colorAllocate(0,   0,   0);
+        $gdNew->filledRectangle(0, 0, $iWidth, $iHeight, $cWhite);
 
         my $iPos = $iStart;
-        foreach my $cWk ( split( //, $sBarcode ) ) {
-            if ( $cWk eq '0' ) {
-                $gdNew->line( $iPos, 0, $iPos, $iHeight - $fH, $cWhite );
+        foreach my $cWk (split(//, $sBarcode)) {
+            if ($cWk eq '0') {
+                $gdNew->line($iPos, 0, $iPos, $iHeight - $fH, $cWhite);
             }
-            elsif ( $cWk eq 'G' ) {
-                $gdNew->line( $iPos, 0, $iPos, $iHeight - 2 * ( $fH / 3 ),
-                    $cBlack );
+            elsif ($cWk eq 'G') {
+                $gdNew->line($iPos, 0, $iPos, $iHeight - 2 * ($fH / 3), $cBlack);
             }
             else {    #$cWk eq "1" etc.
-                $gdNew->line( $iPos, 0, $iPos, $iHeight - $fH, $cBlack );
+                $gdNew->line($iPos, 0, $iPos, $iHeight - $fH, $cBlack);
             }
             $iPos++;
         }
     };
-    return ( $gdNew, $cBlack );
+    return ($gdNew, $cBlack);
 }
 1;
 __END__

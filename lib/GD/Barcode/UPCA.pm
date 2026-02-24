@@ -4,8 +4,8 @@ use warnings;
 
 use GD::Barcode;
 use parent qw(Exporter);
-use vars qw($VERSION @ISA $errStr);
-@ISA     = qw(GD::Barcode Exporter);
+use vars   qw($VERSION @ISA $errStr);
+@ISA = qw(GD::Barcode Exporter);
 our $VERSION = '2.02';
 my $leftOddBar = {
     "0" => "0001101",
@@ -35,24 +35,24 @@ my $guardBar  = "G0G";
 my $centerBar = "0G0G0";
 
 sub new {
-    my ( $sClass, $sTxt ) = @_;
+    my ($sClass, $sTxt) = @_;
     $errStr = '';
     my $oThis = {};
     bless $oThis, $sClass;
-    return if ( $errStr = $oThis->init($sTxt) );
+    return if ($errStr = $oThis->init($sTxt));
     return $oThis;
 }
 
 sub init {
-    my ( $oThis, $sTxt ) = @_;
-    return 'Invalid characters' if ( $sTxt =~ /[^0-9]/ );
+    my ($oThis, $sTxt) = @_;
+    return 'Invalid characters' if ($sTxt =~ /[^0-9]/);
 
-    #Check
+    # Check
     my $iLen = length($sTxt);
-    if ( $iLen == 11 ) {
+    if ($iLen == 11) {
         $sTxt .= calcUPCACD($sTxt);
     }
-    elsif ( $iLen == 12 ) {
+    elsif ($iLen == 12) {
         ;
     }
     else {
@@ -64,94 +64,77 @@ sub init {
 
 sub calcUPCACD {
     my ($sTxt) = @_;
-    my ( $i, $iSum, @aWeight );
+    my ($i, $iSum, @aWeight);
 
-    @aWeight = ( 3, 1, 3, 1, 3, 1, 3, 1, 3, 1, 3 );
-    $iSum = 0;
-    for ( $i = 0 ; $i < 11 ; $i++ ) {
-        $iSum += substr( $sTxt, $i, 1 ) * $aWeight[$i];
+    @aWeight = (3, 1, 3, 1, 3, 1, 3, 1, 3, 1, 3);
+    $iSum    = 0;
+    for ($i = 0; $i < 11; $i++) {
+        $iSum += substr($sTxt, $i, 1) * $aWeight[$i];
     }
     $iSum %= 10;
-    $iSum = ( $iSum == 0 ) ? 0 : ( 10 - $iSum );
+    $iSum = ($iSum == 0) ? 0 : (10 - $iSum);
     return "$iSum";
 }
 
 sub barcode {
     my ($oThis) = @_;
-    my ( $topDigit, $oddEven, $c, $i );
+    my ($topDigit, $oddEven, $c, $i);
     my ($sRes);
 
-    #(1)Init
+    # (1)Init
     my $sTxt = $oThis->{text};
     $sRes = $guardBar;    #GUARD
 
-    #(2)Left 6 letters
-    my $s1st = GD::Barcode::barPtn( substr( $sTxt, 0, 1 ), $leftOddBar );
+    # (2)Left 6 letters
+    my $s1st = GD::Barcode::barPtn(substr($sTxt, 0, 1), $leftOddBar);
     $s1st =~ tr/1/G/;
     $sRes .= $s1st;
-    for ( $i = 1 ; $i < 6 ; $i++ ) {
-        $sRes .= GD::Barcode::barPtn( substr( $sTxt, $i, 1 ), $leftOddBar );
+    for ($i = 1; $i < 6; $i++) {
+        $sRes .= GD::Barcode::barPtn(substr($sTxt, $i, 1), $leftOddBar);
     }
 
-    #(4)Center
+    # (4)Center
     $sRes .= $centerBar;
 
-    #(5)Right
-    for ( $i = 6 ; $i < 11 ; $i++ ) {
-        $sRes .= GD::Barcode::barPtn( substr( $sTxt, $i, 1 ), $rightBar );
+    # (5)Right
+    for ($i = 6; $i < 11; $i++) {
+        $sRes .= GD::Barcode::barPtn(substr($sTxt, $i, 1), $rightBar);
     }
-    my $sLast = GD::Barcode::barPtn( substr( $sTxt, 11, 1 ), $rightBar );
+    my $sLast = GD::Barcode::barPtn(substr($sTxt, 11, 1), $rightBar);
     $sLast =~ tr/1/G/;
     $sRes .= $sLast;
 
-    #(6)GUARD
+    # (6)GUARD
     $sRes .= $guardBar;
     return $sRes;
 }
 
 sub plot {
-    my ( $oThis, %hParam ) = @_;
+    my ($oThis, %hParam) = @_;
 
     my $sTxt = $oThis->{text};
     my $sPtn = $oThis->barcode();
 
-    #Create Image
-    my $iHeight = ( $hParam{Height} ) ? $hParam{Height} : 50;
-    my ( $oGd, $cBlack );
-    if ( $hParam{NoText} ) {
-        ( $oGd, $cBlack ) =
-          GD::Barcode::plot( $sPtn, length($sPtn), $iHeight, 0, 0 );
+    # Create Image
+    my $iHeight = ($hParam{Height}) ? $hParam{Height} : 50;
+    my ($oGd, $cBlack);
+    if ($hParam{NoText}) {
+        ($oGd, $cBlack)
+            = GD::Barcode::plot($sPtn, length($sPtn), $iHeight, 0, 0);
     }
     else {
         require GD;
-        my ( $fW, $fH ) = ( GD::Font->Small->width, GD::Font->Small->height );
-        my $iWidth = length($sPtn) + 2 * ( $fW + 1 );
+        my ($fW, $fH) = (GD::Font->Small->width, GD::Font->Small->height);
+        my $iWidth = length($sPtn) + 2 * ($fW + 1);
 
-        #Bar Image
-        ( $oGd, $cBlack ) =
-          GD::Barcode::plot( $sPtn, $iWidth, $iHeight, $fH, $fW + 1 );
+        # Bar Image
+        ($oGd, $cBlack) = GD::Barcode::plot($sPtn, $iWidth, $iHeight, $fH, $fW + 1);
 
-        #String
-        $oGd->string(
-            GD::Font->Small, 0,
-            $iHeight - $fH,
-            substr( $sTxt, 0, 1 ), $cBlack
-        );
-        $oGd->string(
-            GD::Font->Small, $fW + 14,
-            $iHeight - $fH,
-            substr( $sTxt, 1, 5 ), $cBlack
-        );
-        $oGd->string(
-            GD::Font->Small, $fW + 53,
-            $iHeight - $fH,
-            substr( $sTxt, 6, 5 ), $cBlack
-        );
-        $oGd->string(
-            GD::Font->Small, $fW + 98,
-            $iHeight - $fH,
-            substr( $sTxt, 11, 1 ), $cBlack
-        );
+        # String
+        $oGd->string(GD::Font->Small, 0,        $iHeight - $fH, substr($sTxt, 0,  1), $cBlack);
+        $oGd->string(GD::Font->Small, $fW + 14, $iHeight - $fH, substr($sTxt, 1,  5), $cBlack);
+        $oGd->string(GD::Font->Small, $fW + 53, $iHeight - $fH, substr($sTxt, 6,  5), $cBlack);
+        $oGd->string(GD::Font->Small, $fW + 98, $iHeight - $fH, substr($sTxt, 11, 1), $cBlack);
     }
     return $oGd;
 }

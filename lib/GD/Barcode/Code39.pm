@@ -4,8 +4,8 @@ use warnings;
 
 use GD::Barcode;
 use parent qw(Exporter);
-use vars qw($VERSION @ISA $errStr);
-@ISA     = qw(GD::Barcode Exporter);
+use vars   qw($VERSION @ISA $errStr);
+@ISA = qw(GD::Barcode Exporter);
 our $VERSION = '2.02';
 my $code39Bar = {
     '0' => '000110100',
@@ -55,19 +55,19 @@ my $code39Bar = {
 };
 
 sub new {
-    my ( $sClass, $sTxt ) = @_;
+    my ($sClass, $sTxt) = @_;
     $errStr = '';
     my $oThis = {};
     bless $oThis, $sClass;
-    return if ( $errStr = $oThis->init($sTxt) );
+    return if ($errStr = $oThis->init($sTxt));
     return $oThis;
 }
 
 sub init {
-    my ( $oThis, $sTxt ) = @_;
+    my ($oThis, $sTxt) = @_;
 
-    #Check
-    return 'Invalid Characters' if ( $sTxt =~ /[^0-9A-Z\-*+\$%\/. ]/ );
+    # Check
+    return 'Invalid Characters' if ($sTxt =~ /[^0-9A-Z\-*+\$%\/. ]/);
     $oThis->{text} = $sTxt;
     return '';
 }
@@ -75,46 +75,40 @@ sub init {
 sub barcode {
     my ($oThis) = @_;
     my ($sTxt);
-    my ( $sWk, $sRes );
+    my ($sWk, $sRes);
 
     $sTxt = $oThis->{text};
     $sRes = '';
-    foreach my $sWk ( split( //, $sTxt ) ) {
-        $sRes .= GD::Barcode::dumpCode( $code39Bar->{$sWk} . '0' );
+    foreach my $sWk (split(//, $sTxt)) {
+        $sRes .= GD::Barcode::dumpCode($code39Bar->{$sWk} . '0');
     }
     return $sRes;
 }
 
 sub plot {
-    my ( $oThis, %hParam ) = @_;
+    my ($oThis, %hParam) = @_;
 
-    #Barcode Pattern
+    # Barcode Pattern
     my $sTxtWk = $oThis->{text};
     my $sPtn   = $oThis->barcode();
 
-    #Create Image
-    my $iHeight = ( $hParam{Height} ) ? $hParam{Height} : 50;
-    my ( $oGd, $cBlack );
-    if ( $hParam{NoText} ) {
-        ( $oGd, $cBlack ) =
-          GD::Barcode::plot( $sPtn, length($sPtn), $iHeight, 0, 0 );
+    # Create Image
+    my $iHeight = ($hParam{Height}) ? $hParam{Height} : 50;
+    my ($oGd, $cBlack);
+    if ($hParam{NoText}) {
+        ($oGd, $cBlack)
+            = GD::Barcode::plot($sPtn, length($sPtn), $iHeight, 0, 0);
     }
     else {
         require GD;
-        my ( $fW, $fH ) = ( GD::Font->Small->width, GD::Font->Small->height );
+        my ($fW, $fH) = (GD::Font->Small->width, GD::Font->Small->height);
         my $iWidth = length($sPtn);
 
-        #Bar Image
-        ( $oGd, $cBlack ) =
-          GD::Barcode::plot( $sPtn, $iWidth, $iHeight, $fH, 0 );
+        # Bar Image
+        ($oGd, $cBlack) = GD::Barcode::plot($sPtn, $iWidth, $iHeight, $fH, 0);
 
-        #String
-        $oGd->string(
-            GD::Font->Small,
-            ( length($sPtn) - $fW * ( length($sTxtWk) ) ) / 2,
-            $iHeight - $fH,
-            $sTxtWk, $cBlack
-        );
+        # String
+        $oGd->string(GD::Font->Small, (length($sPtn) - $fW * (length($sTxtWk))) / 2, $iHeight - $fH, $sTxtWk, $cBlack);
     }
     return $oGd;
 }
